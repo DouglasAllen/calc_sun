@@ -1,4 +1,4 @@
-lib/eot/eot.so
+lib/calc_sun/calc_sun.so
 .gem
 .rbc
 .rspec
@@ -18,7 +18,5 @@ ri
 spec/reports
 test/tmp
 test/version_tmp
-tmp
-ext/eot/ceot.o
-ext/eot/eot.o
-ext/eot/Makefile
+tmp/*
+

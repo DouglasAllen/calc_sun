@@ -222,8 +222,8 @@ def rev180(x)
 end
 
 include Math
-@lat = 41.95
-@lon = -88.75
+lat = 41.95
+lon = -88.75
 day = Date.parse('2016-11-29')
 jd = day.jd
 d = jd - lon / 360.0 - J2000
@@ -234,9 +234,9 @@ lst = (st + 180 + lon) % 360.0
 ra = cs.right_ascension(d) * 180 / PI
 t_south = 12.0 - rev180(lst - ra) / 15.0
 
-diurnal_arc = cs.dlt(d, lat)
-rise = t_south - diurnal_arc / 2.0
-set = t_south + diurnal_arc / 2.0
+diurnal_arc = cs.dlt(d, lat) / 2.0
+rise = t_south - diurnal_arc
+set = t_south + diurnal_arc
 
 printf("\n")
 

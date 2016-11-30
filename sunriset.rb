@@ -23,9 +23,9 @@ lst = (st + 180 + lon) % 360.0
 ra = cs.right_ascension(d) * 180 / PI
 t_south = 12.0 - rev180(lst - ra) / 15.0
 
-diurnal_arc = cs.dlt(d, lat)
-rise = t_south - diurnal_arc / 2.0
-set = t_south + diurnal_arc / 2.0
+diurnal_arc = cs.dlt(d, lat) / 2.0
+rise = t_south - diurnal_arc
+set = t_south + diurnal_arc
 
 printf("\n")
 

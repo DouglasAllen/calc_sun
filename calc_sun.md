@@ -1,20 +1,19 @@
+
+```code
 #include <ruby.h>
-// #include <math.h>
 
 #ifndef DBL2NUM
-# define DBL2NUM(dbl) rb_float_new(dbl)
+#define DBL2NUM(dbl) rb_float_new(dbl)
 #endif
 
 #define R2D 57.295779513082320876798154814105
 #define D2R 0.017453292519943295769236907684886
 #define M2PI M_PI * 2.0
 
-// static ID id_status;
-
 static VALUE 
 t_init(VALUE self)
 {
-	return self;
+  return self;
 }
 
 static VALUE
@@ -163,8 +162,8 @@ func_declination(VALUE self, VALUE vd)
 static VALUE
 func_sidetime(VALUE self, VALUE vd)
 {
-  double vst = fmod((180 + 357.52911 + 282.9404) + 
-			(0.985600281725 + 4.70935E-5) * NUM2DBL(vd), 360.0);
+  double vst = fmod((180 + 357.52911 + 282.9404) +
+    (0.985600281725 + 4.70935E-5) * NUM2DBL(vd), 360.0);
   return DBL2NUM(vst);
 }
 
@@ -181,14 +180,14 @@ func_dlt(VALUE self, VALUE vd, VALUE vlat)
   double vcos_dec = sqrt( 1.0 - vsin_dec * vsin_dec );
   double vdl = acos((vsin_alt - vsin_dec * vsin_lat) / (vcos_dec * vcos_lat));
   double vdla = vdl * R2D;
-  double vdlt = vdla / 15.0 * 2.0;  
+  double vdlt = vdla / 15.0 * 2.0;
   return DBL2NUM(vdlt);
-} 
+}
 
 void Init_calc_sun(void)
 {
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
-  rb_define_method(cCalcSun, "initialize", t_init, 0); 
+  rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_method(cCalcSun, "mean_anomally", func_mean_anomally, 1);
   rb_define_method(cCalcSun, "eccentricity", func_eccentricity, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
@@ -208,3 +207,48 @@ void Init_calc_sun(void)
   rb_define_method(cCalcSun, "sidereal_time", func_sidetime, 1);
   rb_define_method(cCalcSun, "dlt", func_dlt, 2);
 }
+```
+
+```ruby
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'calc_sun'
+
+require 'date'
+J2000 = DateTime.parse('2000-01-01T12:00:00').jd
+INV360 = 1.0 / 360.0
+def rev180(x)
+  x - 360.0 * (x * INV360 + 0.5).floor
+end
+
+include Math
+@lat = 41.95
+@lon = -88.75
+day = Date.parse('2016-11-29')
+jd = day.jd
+d = jd - lon / 360.0 - J2000
+cs = CalcSun.new
+st = cs.sidereal_time(d)
+lst = (st + 180 + lon) % 360.0
+
+ra = cs.right_ascension(d) * 180 / PI
+t_south = 12.0 - rev180(lst - ra) / 15.0
+
+diurnal_arc = cs.dlt(d, lat)
+rise = t_south - diurnal_arc / 2.0
+set = t_south + diurnal_arc / 2.0
+
+printf("\n")
+
+printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
+       rise.floor, (rise % 1 * 60.0).floor)
+
+printf("\tSun at south \t\t : %2.0f:%02.0f UTC\n",
+       ((rise + set) / 2.0).floor,
+       (((rise + set) / 2.0 % 1.0) * 60).floor)
+
+printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
+       set.floor, (set % 1 * 60.0).floor)
+
+
+```

@@ -13,7 +13,7 @@ end
 include Math
 lat = 41.95
 lon = -88.75
-day = Date.parse('2016-11-29')
+day = Date.parse('2016-12-02')
 jd = day.jd
 d = jd - lon / 360.0 - J2000
 cs = CalcSun.new

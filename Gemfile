@@ -8,6 +8,7 @@ group :development, :test do
   gem 'development'
   gem 'thor'
   gem 'guard'
+  gem 'guard-rspec', require: false
   gem 'minitest'
   gem 'guard-minitest'
   gem 'ZenTest'

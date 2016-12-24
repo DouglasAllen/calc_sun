@@ -296,6 +296,14 @@ func_t_set(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
   return DBL2NUM(ts + da);
 }
 
+static VALUE
+func_t_mid_day(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
+{
+  double tr = NUM2DBL(func_t_rise(self, vjd, vlon, vlat));
+  double ts = NUM2DBL(func_t_set(self, vjd, vlon, vlat));
+  return DBL2NUM((tr + ts) / 2.0);
+}
+
 void Init_calc_sun(void)
 {
   VALUE cCalcSun =
@@ -349,4 +357,6 @@ void Init_calc_sun(void)
   "t_rise", func_t_rise, 3);
   rb_define_method(cCalcSun,
   "t_set", func_t_set, 3);
+  rb_define_method(cCalcSun,
+  "t_mid_day", func_t_mid_day, 3);
 }

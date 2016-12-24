@@ -12,6 +12,7 @@ lon = -88.75
 day = Date.parse('2016-12-25')
 jd = day.jd - DJ00 - lon / 360.0
 rise = cs.t_rise(jd, lon, lat)
+midday = cs.t_mid_day(jd, lon, lat)
 set = cs.t_set(jd, lon, lat)
 
 printf("\n")
@@ -19,9 +20,8 @@ printf("\n")
 printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
        rise.floor, (rise % 1 * 60.0).floor)
 
-printf("\tSun mid day \t\t\t : %2.0f:%02.0f UTC\n",
-       ((rise + set) / 2.0).floor,
-       (((rise + set) / 2.0 % 1.0) * 60).floor)
+printf("\tSun midday \t\t\t : %2.0f:%02.0f UTC\n",
+       midday.floor, ((midday % 1.0) * 60).floor)
 
 printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
        set.floor, (set % 1 * 60.0).floor)

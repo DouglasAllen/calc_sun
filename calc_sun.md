@@ -303,6 +303,14 @@ func_t_set(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
   return DBL2NUM(ts + da);
 }
 
+static VALUE
+func_t_mid_day(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
+{
+  double tr = NUM2DBL(func_t_rise(self, vjd, vlon, vlat));
+  double ts = NUM2DBL(func_t_set(self, vjd, vlon, vlat));
+  return DBL2NUM((tr + ts) / 2.0);
+}
+
 void Init_calc_sun(void)
 {
   VALUE cCalcSun =
@@ -356,6 +364,8 @@ void Init_calc_sun(void)
   "t_rise", func_t_rise, 3);
   rb_define_method(cCalcSun,
   "t_set", func_t_set, 3);
+  rb_define_method(cCalcSun,
+  "t_mid_day", func_t_mid_day, 3);
 }
 ```
 
@@ -379,6 +389,7 @@ lon = -88.75
 day = Date.parse('2016-12-25')
 jd = day.jd - DJ00 - lon / 360.0
 rise = cs.t_rise(jd, lon, lat)
+midday = cs.t_mid_day(jd, lon, lat)
 set = cs.t_set(jd, lon, lat)
 
 printf("\n")
@@ -386,9 +397,8 @@ printf("\n")
 printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
        rise.floor, (rise % 1 * 60.0).floor)
 
-printf("\tSun mid day \t\t\t : %2.0f:%02.0f UTC\n",
-       ((rise + set) / 2.0).floor,
-       (((rise + set) / 2.0 % 1.0) * 60).floor)
+printf("\tSun midday \t\t\t : %2.0f:%02.0f UTC\n",
+       midday.floor, ((midday % 1.0) * 60).floor)
 
 printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
        set.floor, (set % 1 * 60.0).floor)
@@ -583,6 +593,13 @@ class TestCalcSun200 < Test::Unit::TestCase
     )
   end
 
+  def test_t_mid_day
+    assert_equal(
+      12.055110859092,
+      @t.t_mid_day(@t_ajd, @t_lon, @t_lat).round(12)
+    )
+  end
+
   def test_t_set
     assert_equal(
       18.115476940033,
@@ -599,13 +616,10 @@ class TestCalcSun200 < Test::Unit::TestCase
   end
 
   def test_midday_time
-    rise = @t.t_rise(@t_ajd, @t_lon, @t_lat).round(12)
-    set = @t.t_set(@t_ajd, @t_lon, @t_lat).round(12)
-    dlt = rise + set
+    midday = @t.t_mid_day(@t_ajd, @t_lon, @t_lat).round(12)
     assert_equal(
-      "Sun at south \t\t : 12:3 UTC",
-      "Sun at south \t\t : #{(dlt / 2.0).floor}:#{((dlt /
-      2.0 % 1.0) * 60).floor} UTC"
+      "Sun mid day \t\t\t : 12:3 UTC",
+      "Sun mid day \t\t\t : #{midday.floor}:#{((midday % 1.0) * 60).floor} UTC"
     )
   end
 

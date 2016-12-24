@@ -180,6 +180,13 @@ class TestCalcSun200 < Test::Unit::TestCase
     )
   end
 
+  def test_t_mid_day
+    assert_equal(
+      12.055110859092,
+      @t.t_mid_day(@t_ajd, @t_lon, @t_lat).round(12)
+    )
+  end
+
   def test_t_set
     assert_equal(
       18.115476940033,
@@ -196,13 +203,10 @@ class TestCalcSun200 < Test::Unit::TestCase
   end
 
   def test_midday_time
-    rise = @t.t_rise(@t_ajd, @t_lon, @t_lat).round(12)
-    set = @t.t_set(@t_ajd, @t_lon, @t_lat).round(12)
-    dlt = rise + set
+    midday = @t.t_mid_day(@t_ajd, @t_lon, @t_lat).round(12)
     assert_equal(
       "Sun mid day \t\t\t : 12:3 UTC",
-      "Sun mid day \t\t\t : #{(dlt / 2.0).floor}:#{((dlt /
-      2.0 % 1.0) * 60).floor} UTC"
+      "Sun mid day \t\t\t : #{midday.floor}:#{((midday % 1.0) * 60).floor} UTC"
     )
   end
 

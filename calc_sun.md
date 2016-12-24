@@ -383,7 +383,7 @@ printf("\n")
 printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
        rise.floor, (rise % 1 * 60.0).floor)
 
-printf("\tSun at south \t\t : %2.0f:%02.0f UTC\n",
+printf("\tSun mid day \t\t\t : %2.0f:%02.0f UTC\n",
        ((rise + set) / 2.0).floor,
        (((rise + set) / 2.0 % 1.0) * 60).floor)
 
@@ -587,8 +587,8 @@ class TestCalcSun < MiniTest::Test
     set = @t.t_set(@t_ajd, @t_lon, @t_lat).round(12)
     dlt = rise + set
     assert_equal(
-      "Sun mid day \t\t : 12:3 UTC",
-      "Sun mid day \t\t : #{(dlt / 2.0).floor}:#{((dlt /
+      "Sun mid day \t\t\t : 12:3 UTC",
+      "Sun mid day \t\t\t : #{(dlt / 2.0).floor}:#{((dlt /
       2.0 % 1.0) * 60).floor} UTC"
     )
   end

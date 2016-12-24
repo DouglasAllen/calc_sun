@@ -19,7 +19,7 @@ printf("\n")
 printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
        rise.floor, (rise % 1 * 60.0).floor)
 
-printf("\tSun at south \t\t : %2.0f:%02.0f UTC\n",
+printf("\tSun mid day \t\t\t : %2.0f:%02.0f UTC\n",
        ((rise + set) / 2.0).floor,
        (((rise + set) / 2.0 % 1.0) * 60).floor)
 

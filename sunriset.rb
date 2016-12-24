@@ -2,30 +2,17 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
+cs = CalcSun.new
 
 require 'date'
 J2000 = DateTime.parse('2000-01-01T12:00:00').jd
-INV360 = 1.0 / 360.0
-def rev180(x)
-  x - 360.0 * (x * INV360 + 0.5).floor
-end
 
-include Math
 lat = 41.95
 lon = -88.75
-day = Date.parse('2016-12-02')
-jd = day.jd
-d = jd - lon / 360.0 - J2000
-cs = CalcSun.new
-st = cs.sidereal_time(d)
-lst = (st + 180 + lon) % 360.0
-
-ra = cs.right_ascension(d) * 180 / PI
-t_south = 12.0 - rev180(lst - ra) / 15.0
-
-diurnal_arc = cs.dlt(d, lat) / 2.0
-rise = t_south - diurnal_arc
-set = t_south + diurnal_arc
+day = Date.parse('2016-12-25')
+jd = day.jd - J2000 - lon / 360.0
+rise = cs.t_rise(jd, lon, lat)
+set = cs.t_set(jd, lon, lat)
 
 printf("\n")
 

@@ -228,7 +228,6 @@ func_sidetime(VALUE self, VALUE vjd)
   fmod(
     (180 + 357.52911 + 282.9404) +
     (0.985600281725 + 4.70935E-5) * vd, 360.0);
-  // printf("%f \n", vd);
   return DBL2NUM(vst / 15.0);
 }
 

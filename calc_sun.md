@@ -235,7 +235,6 @@ func_sidetime(VALUE self, VALUE vjd)
   fmod(
     (180 + 357.52911 + 282.9404) +
     (0.985600281725 + 4.70935E-5) * vd, 360.0);
-  // printf("%f \n", vd);
   return DBL2NUM(vst / 15.0);
 }
 
@@ -360,6 +359,10 @@ void Init_calc_sun(void)
 }
 ```
 
+```console
+$> bundle exec rake compile
+```
+
 ## Example usage code
 
 ```ruby
@@ -391,21 +394,24 @@ printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
        set.floor, (set % 1 * 60.0).floor)
 ```
 
+```console
+$> ruby sunriset.rb
+```
+
 ## Test code
 
 ```ruby
 require 'rubygems'
 gem 'minitest'
 require 'minitest/autorun'
-# require 'test/unit'
+require 'test/unit'
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 require 'date'
 #
-class TestCalcSun < MiniTest::Test
-  # class TestCalcSun < Test::Unit::TestCase
-
+# class TestCalcSun < MiniTest::Test
+class TestCalcSun100 < Test::Unit::TestCase
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0
@@ -496,6 +502,16 @@ class TestCalcSun < MiniTest::Test
       @t.rv(@t_ajd).round(12)
     )
   end
+end
+
+#
+class TestCalcSun200 < Test::Unit::TestCase
+  def setup
+    @t = CalcSun.new
+    @t_ajd = 0.0
+    @t_lat = 0.0
+    @t_lon = 0.0
+  end
 
   def test_ecliptic_x
     assert_equal(
@@ -577,7 +593,7 @@ class TestCalcSun < MiniTest::Test
   def test_rise_time
     rise = @t.t_rise(@t_ajd, @t_lon, @t_lat).round(12)
     assert_equal(
-      'Sun rises \t\t\t : 5:59 UTC',
+      "Sun rises \t\t\t : 5:59 UTC",
       "Sun rises \t\t\t : #{rise.floor}:#{(rise % 1 * 60.0).floor} UTC"
     )
   end
@@ -587,8 +603,8 @@ class TestCalcSun < MiniTest::Test
     set = @t.t_set(@t_ajd, @t_lon, @t_lat).round(12)
     dlt = rise + set
     assert_equal(
-      "Sun mid day \t\t\t : 12:3 UTC",
-      "Sun mid day \t\t\t : #{(dlt / 2.0).floor}:#{((dlt /
+      "Sun at south \t\t : 12:3 UTC",
+      "Sun at south \t\t : #{(dlt / 2.0).floor}:#{((dlt /
       2.0 % 1.0) * 60).floor} UTC"
     )
   end
@@ -596,9 +612,14 @@ class TestCalcSun < MiniTest::Test
   def test_set_time
     set = @t.t_set(@t_ajd, @t_lon, @t_lat).round(12)
     assert_equal(
-      'Sun sets \t\t\t : 18:6 UTC',
+      "Sun sets \t\t\t : 18:6 UTC",
       "Sun sets \t\t\t : #{set.floor}:#{(set % 1 * 60.0).floor} UTC"
     )
   end
 end
+
+```
+
+```console
+$> ruby test/test_calc_sun.rb
 ```

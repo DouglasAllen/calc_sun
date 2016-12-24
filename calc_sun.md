@@ -16,7 +16,7 @@ Project home: [https://github.com/DouglasAllen/calc_sun](https://github.com/Doug
 #define M2PI M_PI * 2.0
 #define INV24 1.0 / 24.0
 #define INV360 1.0 / 360.0
-#define J2000 2451545.0
+#define DJ00 2451545.0
 
 // static ID id_status;
 
@@ -369,12 +369,12 @@ require 'calc_sun'
 cs = CalcSun.new
 
 require 'date'
-J2000 = DateTime.parse('2000-01-01T12:00:00').jd
+DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
 
 lat = 41.95
 lon = -88.75
 day = Date.parse('2016-12-25')
-jd = day.jd - J2000 - lon / 360.0
+jd = day.jd - DJ00 - lon / 360.0
 rise = cs.t_rise(jd, lon, lat)
 set = cs.t_set(jd, lon, lat)
 

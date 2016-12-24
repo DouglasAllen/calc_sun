@@ -9,7 +9,7 @@
 #define M2PI M_PI * 2.0
 #define INV24 1.0 / 24.0
 #define INV360 1.0 / 360.0
-#define J2000 2451545.0
+#define DJ00 2451545.0
 
 // static ID id_status;
 

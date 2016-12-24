@@ -5,12 +5,12 @@ require 'calc_sun'
 cs = CalcSun.new
 
 require 'date'
-J2000 = DateTime.parse('2000-01-01T12:00:00').jd
+DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
 
 lat = 41.95
 lon = -88.75
 day = Date.parse('2016-12-25')
-jd = day.jd - J2000 - lon / 360.0
+jd = day.jd - DJ00 - lon / 360.0
 rise = cs.t_rise(jd, lon, lat)
 set = cs.t_set(jd, lon, lat)
 

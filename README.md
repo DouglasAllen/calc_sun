@@ -1,5 +1,7 @@
 # CalcSun
 
+[![Gem Version](https://badge.fury.io/rb/calc_sun.svg)](https://badge.fury.io/rb/calc_sun)
+
 ## Installation
 
 Add this line to your application's Gemfile:

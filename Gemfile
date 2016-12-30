@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gemspec
+
 group :development, :test do
   gem 'hoe'
   gem 'rake-compiler', '~> 0.9.3'

@@ -1,5 +1,5 @@
-
-lib = File.expand_path('../lib', __FILE__)
+require 'benchmark'
+lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 cs = CalcSun.new
@@ -25,3 +25,11 @@ printf("\tSun midday \t\t\t : %2.0f:%02.0f UTC\n",
 
 printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
        set.floor, (set % 1 * 60.0).floor)
+
+n = 1_000_000
+puts 'running three method calls 1_000_000 times'
+Benchmark.bm(7) do |x|
+  x.report('rise:') { n.times { ; cs.t_rise(jd, lon, lat); } }
+  x.report('midday:') { n.times { ; cs.t_mid_day(jd, lon, lat); } }
+  x.report('set:') { n.times { ; cs.t_set(jd, lon, lat); } }
+end

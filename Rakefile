@@ -1,22 +1,15 @@
 # -*- ruby -*-
-
+require 'bundler/gem_tasks'
 require 'rubygems'
 require 'hoe'
 require 'rake/testtask'
 require 'rake/extensiontask'
-# Hoe.plugin :compiler
-# Hoe.plugin :cucumberfeatures
-# Hoe.plugin :gem_prelude_sucks
-# Hoe.plugin :inline
+require 'rake/testtask'
+
 Hoe.plugin :manifest
-# Hoe.plugin :minitest
-# Hoe.plugin :newgem
-# Hoe.plugin :racc
-# Hoe.plugin :rcov
-# Hoe.plugin :rdoc
-# Hoe.plugin :website
 
 Hoe.spec 'calc_sun' do
+  self.version = '0.1.0'
   developer('kb9agt', 'kb9agt@gmail.com')
   self.readme_file   = 'README.rdoc'
   self.history_file  = 'HISTORY.rdoc'
@@ -31,3 +24,11 @@ end
 
 Rake::Task[:test].prerequisites << :compile
 # vim: syntax=ruby
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'test'
+  t.libs << 'lib'
+  t.test_files = FileList['test/**/*_test.rb']
+end
+
+task default: :test

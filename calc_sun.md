@@ -34,7 +34,7 @@ func_rev12(VALUE self, VALUE vx)
 }
 
 static VALUE
-func_mean_anomally(VALUE self, VALUE vd)
+func_mean_anomaly(VALUE self, VALUE vd)
 {
   double d = NUM2DBL(vd);
   double vma =
@@ -59,7 +59,7 @@ static VALUE
 func_equation_of_center(VALUE self, VALUE vd)
 {
   double vma =
-  NUM2DBL(func_mean_anomally(self, vd));
+  NUM2DBL(func_mean_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double ve2 = ve * 2.0;
@@ -74,10 +74,10 @@ func_equation_of_center(VALUE self, VALUE vd)
 }
 
 static VALUE
-func_true_anomally(VALUE self, VALUE vd)
+func_true_anomaly(VALUE self, VALUE vd)
 {
   double vma =
-  NUM2DBL(func_mean_anomally(self, vd));
+  NUM2DBL(func_mean_anomaly(self, vd));
   double veoc =
   NUM2DBL(func_equation_of_center(self, vd));
   double vta = vma + veoc;
@@ -97,7 +97,7 @@ func_mean_longitude(VALUE self, VALUE vd)
 }
 
 static VALUE
-func_eccentric_anomally(VALUE self, VALUE vd)
+func_eccentric_anomaly(VALUE self, VALUE vd)
 {
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
@@ -133,7 +133,7 @@ static VALUE
 func_xv(VALUE self, VALUE vd)
 {
   double vea =
-  NUM2DBL(func_eccentric_anomally(self, vd));
+  NUM2DBL(func_eccentric_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double vxv = cos(vea) - ve;
@@ -144,7 +144,7 @@ static VALUE
 func_yv(VALUE self, VALUE vd)
 {
   double vea =
-  NUM2DBL(func_eccentric_anomally(self, vd));
+  NUM2DBL(func_eccentric_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double vyv =
@@ -156,7 +156,7 @@ static VALUE
 func_true_longitude(VALUE self, VALUE vd)
 {
   double vta =
-  NUM2DBL(func_true_anomally(self, vd));
+  NUM2DBL(func_true_anomaly(self, vd));
   double vlop =
   NUM2DBL(func_longitude_of_perihelion(self, vd));
   double vtl =
@@ -319,17 +319,17 @@ void Init_calc_sun(void)
   rb_define_method(cCalcSun,
   "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun,
-  "mean_anomally", func_mean_anomally, 1);
+  "mean_anomally", func_mean_anomaly, 1);
   rb_define_method(cCalcSun,
   "eccentricity", func_eccentricity, 1);
   rb_define_method(cCalcSun,
   "equation_of_center", func_equation_of_center, 1);
   rb_define_method(cCalcSun,
-  "true_anomally", func_true_anomally, 1);
+  "true_anomally", func_true_anomaly, 1);
   rb_define_method(cCalcSun,
   "mean_longitude", func_mean_longitude, 1);
   rb_define_method(cCalcSun,
-  "eccentric_anomally", func_eccentric_anomally, 1);
+  "eccentric_anomally", func_eccentric_anomaly, 1);
   rb_define_method(cCalcSun,
   "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun,
@@ -376,6 +376,7 @@ $> bundle exec rake compile
 ## Example usage code
 
 ```ruby
+require 'benchmark'
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
@@ -402,10 +403,27 @@ printf("\tSun midday \t\t\t : %2.0f:%02.0f UTC\n",
 
 printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
        set.floor, (set % 1 * 60.0).floor)
+
+n = 1_000_000
+Benchmark.bm(7) do |x|
+  x.report('rise:') { n.times { ; cs.t_rise(jd, lon, lat); } }
+  x.report('midday:') { n.times { ; cs.t_mid_day(jd, lon, lat); } }
+  x.report('set:') { n.times { ; cs.t_set(jd, lon, lat); } }
+end
 ```
 
 ```console
 $> ruby sunriset.rb
+```
+
+```console
+  Sun rises        : 13:21 UTC
+  Sun midday       : 17:55 UTC
+  Sun sets         : 22:29 UTC
+              user     system      total        real
+rise:     3.968000   0.000000   3.968000 (  4.195124)
+midday:   7.829000   0.000000   7.829000 (  8.258836)
+set:      3.984000   0.000000   3.984000 (  4.076902)
 ```
 
 ## Test code
@@ -429,10 +447,10 @@ class TestCalcSun100 < Test::Unit::TestCase
     @t_lon = 0.0
   end
 
-  def test_mean_anomally
+  def test_mean_anomaly
     assert_equal(
       6.240059966692,
-      @t.mean_anomally(@t_ajd).round(12)
+      @t.mean_anomaly(@t_ajd).round(12)
     )
   end
 
@@ -450,10 +468,10 @@ class TestCalcSun100 < Test::Unit::TestCase
     )
   end
 
-  def test_true_anomally
+  def test_true_anomaly
     assert_equal(
       6.238588585825,
-      @t.true_anomally(@t_ajd).round(12)
+      @t.true_anomaly(@t_ajd).round(12)
     )
   end
 
@@ -467,7 +485,7 @@ class TestCalcSun100 < Test::Unit::TestCase
   def test_eccentric_anomaly
     assert_equal(
       4.878582250862,
-      @t.eccentric_anomally(@t_ajd).round(12)
+      @t.eccentric_anomaly(@t_ajd).round(12)
     )
   end
 
@@ -636,4 +654,23 @@ end
 
 ```console
 $> ruby test/test_calc_sun.rb
+```
+
+```console
+Started
+...........................
+
+Finished in 0.010992 seconds.
+------
+27 tests, 27 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+100% passed
+------
+2456.33 tests/s, 2456.33 assertions/s
+Run options: --seed 19314
+
+# Running:
+
+Finished in 0.000929s, 0.0000 runs/s, 0.0000 assertions/s.
+
+0 runs, 0 assertions, 0 failures, 0 errors, 0 skips
 ```

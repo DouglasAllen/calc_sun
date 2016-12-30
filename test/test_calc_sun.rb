@@ -16,10 +16,10 @@ class TestCalcSun100 < Test::Unit::TestCase
     @t_lon = 0.0
   end
 
-  def test_mean_anomally
+  def test_mean_anomaly
     assert_equal(
       6.240059966692,
-      @t.mean_anomally(@t_ajd).round(12)
+      @t.mean_anomaly(@t_ajd).round(12)
     )
   end
 
@@ -37,10 +37,10 @@ class TestCalcSun100 < Test::Unit::TestCase
     )
   end
 
-  def test_true_anomally
+  def test_true_anomaly
     assert_equal(
       6.238588585825,
-      @t.true_anomally(@t_ajd).round(12)
+      @t.true_anomaly(@t_ajd).round(12)
     )
   end
 
@@ -54,7 +54,7 @@ class TestCalcSun100 < Test::Unit::TestCase
   def test_eccentric_anomaly
     assert_equal(
       4.878582250862,
-      @t.eccentric_anomally(@t_ajd).round(12)
+      @t.eccentric_anomaly(@t_ajd).round(12)
     )
   end
 

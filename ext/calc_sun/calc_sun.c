@@ -322,23 +322,26 @@ void Init_calc_sun(void)
   rb_define_method(cCalcSun,
   "mean_longitude", func_mean_longitude, 1);
   rb_define_method(cCalcSun,
-  "eccentric_anomally", func_eccentric_anomally, 1);
+  "eccentric_anomally",
+  func_eccentric_anomally, 1);
   rb_define_method(cCalcSun,
-  "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
+  "obliquity_of_ecliptic",
+  func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun,
-  "longitude_of_perihelion", func_longitude_of_perihelion, 1);
-  rb_define_method(cCalcSun,
-  "xv", func_xv, 1);
-  rb_define_method(cCalcSun,
-  "yv", func_yv, 1);
+  "longitude_of_perihelion",
+  func_longitude_of_perihelion, 1);
+  // rb_define_method(cCalcSun,
+  // "xv", func_xv, 1);
+  // rb_define_method(cCalcSun,
+  // "yv", func_yv, 1);
   rb_define_method(cCalcSun,
   "true_longitude", func_true_longitude, 1);
-  rb_define_method(cCalcSun,
-  "rv", func_rv, 1);
-  rb_define_method(cCalcSun,
-  "ecliptic_x", func_ecliptic_x, 1);
-  rb_define_method(cCalcSun,
-  "ecliptic_y", func_ecliptic_y, 1);
+  // rb_define_method(cCalcSun,
+  // "rv", func_rv, 1);
+  // rb_define_method(cCalcSun,
+  // "ecliptic_x", func_ecliptic_x, 1);
+  // rb_define_method(cCalcSun,
+  // "ecliptic_y", func_ecliptic_y, 1);
   rb_define_method(cCalcSun,
   "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun,

@@ -12,6 +12,35 @@ Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 Calculate Sunrise and Sunset. Now uses native C extension.
 An example is supplied to show gem usage.
 
+== INSTALL:
+
+  $> gem install calc_sun
+
+== DOWNLOAD:
+
+  $> git clone https://github.com/DouglasAllen/calc_sun.git
+  $> cd calc_sun
+  $> bundle install
+  $> bundle exec rake install
+
+
+=== Build with DEVKIT
+
+   cd to devkit dir and run devkitvars.bat
+
+   or make a batchfile to start your envirnment with 'run devkitvars'
+   cd to calc_sun dir
+   Rake -T
+
+== DEVELOPERS:
+
+After checking out the source, run:
+
+  $ bundle exec rake newb
+
+This task will install any missing dependencies, run the tests/specs,
+and generate the RDoc.
+
 == FEATURES/PROBLEMS:
 
   n/a
@@ -41,30 +70,6 @@ An example is supplied to show gem usage.
         DateTime.jd(day.jd + cs.t_south(jd, lon) / 24.0)
         DateTime.jd(day.jd + cs.t_set(jd, lon, lat) / 24.0)
 
-
-== INSTALL:
-
-  $> bundle install
-
-  $> bundle exec rake install
-
-
-=== Build with DEVKIT
-
-   cd to devkit dir and run devkitvars.bat
-
-   or make a batchfile to start your envirnment with 'run devkitvars'
-   cd to calc_sun dir
-   Rake -T
-
-== DEVELOPERS:
-
-After checking out the source, run:
-
-  $ bundle exec rake newb
-
-This task will install any missing dependencies, run the tests/specs,
-and generate the RDoc.
 
 == LICENSE:
 

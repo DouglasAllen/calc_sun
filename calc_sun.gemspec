@@ -6,31 +6,28 @@ require 'calc_sun/version'
 Gem::Specification.new do |spec|
   spec.name          = 'calc_sun'
   spec.version       = CalcSun::VERSION
-  spec.authors       = ['Douglas']
+  spec.author        = 'Douglas Allen'
   spec.email         = ['kb9agt@gmail.com']
 
-  spec.summary       = 'Calculate Sun Times ea. rise, noon, set'
-  spec.description   = 'Just supply the date, latitude, and longitude'
+  spec.summary       = 'Calculates Sun Times ea. rise, noon, set'
+  spec.description   = 'supply the jd date, latitude, and longitude in the calls
+                        to each method t_rise(jd, lon, lat),
+                        t_mid_day(jd, lon, lat), and t_set(jd, lon, lat)'
   spec.homepage      = 'https://github.com/DouglasAllen/calc_sun'
   spec.license       = 'MIT'
-
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  # if spec.respond_to?(:metadata)
-  #   spec.metadata['allowed_push_host'] = ""
-  # else
-  #   raise 'RubyGems 2.0 or newer is required to protect against ' \
-  #     'public gem pushes.'
-  # end
-
-  spec.files = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  require 'rake'
+  spec.files = FileList['lib     .rb',
+                        '[A-Z]*',
+                        'test/   *'].to_a
+  spec.extensions << 'ext/eot/extconf.rb'
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
-
+  spec.platform = Gem::Platform::RUBY
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'minitest', '~> 5.0'
+  spec.add_development_dependency 'rake-compiler', '~> 0.9.3'
+  spec.add_development_dependency 'hoe', '~> 3.12.0'
+  spec.add_development_dependency 'guard', '~> 2.6.1'
+  spec.add_development_dependency 'guard-minitest', '~> 2.3.2'
+  spec.add_development_dependency 'minitest', '~> 5.4.1'
 end

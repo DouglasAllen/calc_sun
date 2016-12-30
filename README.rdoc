@@ -1,36 +1,64 @@
+
 = calc_sun
 
-home  :: FIX (url)
-code  :: FIX (url)
-rdoc  :: FIX (url)
-bugs  :: FIX (url)
-... etc ...
+Home    :: https://rubygems.org/gems/calc_sun
+Code    :: https://github.com/DouglasAllen/calc_sun
+RDoc    :: http://http://www.rubydoc.info/gems/calc_sun/
+Issues  :: https://github.com/DouglasAllen/calc_sun/issues
+
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Calculate Sunrise and Sunset. Now uses native C extension.
+An example is supplied to show gem usage.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+  n/a
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+=== start irb
 
-== REQUIREMENTS:
+  $ irb --simple-prompt
 
-* FIX (list of requirements)
+=== enter Code
+
+        require 'calc_sun'
+        cs = CalcSun.new
+        require 'date'
+        # not included yet for determining your mean time
+        DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
+
+        lat = 51.4770228
+        lon = -0.0001147
+        day = Date.parse('2016-12-25')
+        jd = day.jd - DJ00 - lon / 360.0
+        cs.t_rise(jd, lon, lat)
+        cs.t_mid_day(jd, lon, lat)
+        cs.t_set(jd, lon, lat)require 'date'
+
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+  $> bundle install
+
+  $> bundle exec rake install
+
+
+=== Build with DEVKIT
+
+   cd to devkit dir and run devkitvars.bat
+
+   or make a batchfile to start your envirnment with 'run devkitvars'
+   cd to calc_sun dir
+   Rake -T
 
 == DEVELOPERS:
 
 After checking out the source, run:
 
-  $ rake newb
+  $ bundle exec rake newb
 
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
@@ -39,7 +67,7 @@ and generate the RDoc.
 
 (The MIT License)
 
-Copyright (c) 2016 FIX
+Copyright (c) 2016
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

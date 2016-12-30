@@ -3,7 +3,7 @@
 
 Home    :: https://rubygems.org/gems/calc_sun
 Code    :: https://github.com/DouglasAllen/calc_sun
-RDoc    :: http://http://www.rubydoc.info/gems/calc_sun/
+RDoc    :: http://www.rubydoc.info/gems/calc_sun/0.1.1
 Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 
 

@@ -37,6 +37,9 @@ An example is supplied to show gem usage.
         cs.t_rise(jd, lon, lat)
         cs.t_mid_day(jd, lon, lat)
         cs.t_set(jd, lon, lat)require 'date'
+        DateTime.jd(day.jd + cs.t_rise(jd, lon, lat) / 24.0)
+        DateTime.jd(day.jd + cs.t_south(jd, lon) / 24.0)
+        DateTime.jd(day.jd + cs.t_set(jd, lon, lat) / 24.0)
 
 
 == INSTALL:

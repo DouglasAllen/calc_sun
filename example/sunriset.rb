@@ -7,8 +7,8 @@ cs = CalcSun.new
 require 'date'
 DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
 
-lat = 41.95
-lon = -88.75
+lat = 51.4770228
+lon = -0.0001147
 day = Date.parse('2016-12-25')
 jd = day.jd - DJ00 - lon / 360.0
 rise = cs.t_rise(jd, lon, lat)
@@ -31,5 +31,6 @@ puts 'running three method calls 1_000_000 times'
 Benchmark.bm(7) do |x|
   x.report('rise:') { n.times { ; cs.t_rise(jd, lon, lat); } }
   x.report('midday:') { n.times { ; cs.t_mid_day(jd, lon, lat); } }
+  x.report('t_south:') { n.times { ; cs.t_south(jd, lon); } }
   x.report('set:') { n.times { ; cs.t_set(jd, lon, lat); } }
 end

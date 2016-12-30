@@ -11,7 +11,6 @@
 #define INV360 1.0 / 360.0
 #define DJ00 2451545.0
 
-// static ID id_status;
 
 static VALUE
 t_init(VALUE self)
@@ -330,18 +329,18 @@ void Init_calc_sun(void)
   rb_define_method(cCalcSun,
   "longitude_of_perihelion",
   func_longitude_of_perihelion, 1);
-  // rb_define_method(cCalcSun,
-  // "xv", func_xv, 1);
-  // rb_define_method(cCalcSun,
-  // "yv", func_yv, 1);
+  rb_define_method(cCalcSun,
+  "xv", func_xv, 1);
+  rb_define_method(cCalcSun,
+  "yv", func_yv, 1);
   rb_define_method(cCalcSun,
   "true_longitude", func_true_longitude, 1);
-  // rb_define_method(cCalcSun,
-  // "rv", func_rv, 1);
-  // rb_define_method(cCalcSun,
-  // "ecliptic_x", func_ecliptic_x, 1);
-  // rb_define_method(cCalcSun,
-  // "ecliptic_y", func_ecliptic_y, 1);
+  rb_define_method(cCalcSun,
+  "rv", func_rv, 1);
+  rb_define_method(cCalcSun,
+  "ecliptic_x", func_ecliptic_x, 1);
+  rb_define_method(cCalcSun,
+  "ecliptic_y", func_ecliptic_y, 1);
   rb_define_method(cCalcSun,
   "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun,

@@ -61,8 +61,8 @@ and generate the RDoc.
 
         lat = 51.4770228
         lon = -0.0001147
-        day = Date.parse('2016-12-25')
-        jd = day.jd - DJ00 - lon / 360.0
+        day = Date.parse('2016-12-25').jd
+        jd = day - DJ00 - lon / 360.0
         cs.t_rise(jd, lon, lat)
         cs.t_mid_day(jd, lon, lat)
         cs.t_set(jd, lon, lat)

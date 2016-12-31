@@ -11,15 +11,15 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Calculates Sun Times ea. rise, noon, set'
   spec.description   = 'supply the jd date, latitude, and longitude in the calls
-                        to each method t_rise(jd, lon, lat),
-                        t_mid_day(jd, lon, lat), and t_set(jd, lon, lat)'
+                        to each method t_rise(jd, lat, lon),
+                        t_mid_day(jd, lat, lon), and t_set(jd, lat, lon)'
   spec.homepage      = 'https://github.com/DouglasAllen/calc_sun'
   spec.license       = 'MIT'
   require 'rake'
   spec.files = FileList['lib     .rb',
                         '[A-Z]*',
                         'test/   *'].to_a
-  spec.extensions << 'ext/eot/extconf.rb'
+  spec.extensions << 'ext/calc_sun/extconf.rb'
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
   spec.platform = Gem::Platform::RUBY

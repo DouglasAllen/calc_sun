@@ -8,4 +8,5 @@
 /pkg/
 /spec/reports/
 /tmp/
-/lib/calc_sun/calc_sun.so
+InstalledFiles
+lib/calc_sun/calc_sun.so

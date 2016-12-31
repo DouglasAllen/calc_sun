@@ -75,6 +75,16 @@ and generate the RDoc.
         cs.rise(jd, lon, lat)
         cs.noon(jd, lon)
         cs.set(jd, lon, lat)
+        day_array = ['2016-4-14', '2016-6-15', '2016-8-31', '2016-12-25']
+        (0..3).each do |i|
+          day = Date.parse(day_array[i]).jd
+          jd = day - CalcSun::DJ00 - lon / 360.0
+          p Date.jd(day)
+          cs.rise(jd, lon, lat)
+          cs.noon(jd, lon)
+          cs.set(jd, lon, lat)
+        end
+
 
 
 

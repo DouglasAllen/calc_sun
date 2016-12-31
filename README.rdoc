@@ -67,7 +67,7 @@ and generate the RDoc.
         cs.t_mid_day(jd, lat, lon)
         cs.t_set(jd, lon, lat)
         DateTime.jd(day + cs.t_rise(jd, lat, lon) / 24.0)
-        DateTime.jd(day + cs.t_south(jd, lat, lon) / 24.0)
+        DateTime.jd(day + cs.t_mid_day(jd, lat, lon) / 24.0)
         DateTime.jd(day + cs.t_set(jd, lat, lon) / 24.0)
         Date.jd(day)
         # new FEATURES version 0.1.2

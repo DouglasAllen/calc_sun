@@ -31,9 +31,9 @@ cs.set(jd, lon, lat)
 # printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
 #        set.floor, (set % 1 * 60.0).floor)
 
-# n = 1_000_000
-# Benchmark.bm(7) do |x|
-#   x.report('rise:') { n.times { ; cs.t_rise(jd, lon, lat); } }
-#   x.report('midday:') { n.times { ; cs.t_mid_day(jd, lon, lat); } }
-#   x.report('set:') { n.times { ; cs.t_set(jd, lon, lat); } }
-# end
+n = 1_000_000
+Benchmark.bm(7) do |x|
+  x.report('rise:') { n.times { ; cs.t_rise(jd, lon, lat); } }
+  x.report('midday:') { n.times { ; cs.t_mid_day(jd, lon); } }
+  x.report('set:') { n.times { ; cs.t_set(jd, lon, lat); } }
+end

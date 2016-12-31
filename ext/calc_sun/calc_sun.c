@@ -289,19 +289,18 @@ func_t_rise(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
 }
 
 static VALUE
+func_t_mid_day(VALUE self, VALUE vjd, VALUE vlon)
+{
+  double ts = NUM2DBL(func_t_south(self, vjd, vlon));
+  return DBL2NUM(ts);
+}
+
+static VALUE
 func_t_set(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
 {
   double ts = NUM2DBL(func_t_south(self, vjd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vjd, vlat));
   return DBL2NUM(ts + da);
-}
-
-static VALUE
-func_t_mid_day(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
-{
-  double tr = NUM2DBL(func_t_rise(self, vjd, vlon, vlat));
-  double ts = NUM2DBL(func_t_set(self, vjd, vlon, vlat));
-  return DBL2NUM((tr + ts) / 2.0);
 }
 
 static VALUE
@@ -381,9 +380,9 @@ void Init_calc_sun(void)
   rb_define_method(cCalcSun,
   "t_rise", func_t_rise, 3);
   rb_define_method(cCalcSun,
-  "t_set", func_t_set, 3);
+  "t_mid_day", func_t_mid_day, 2);
   rb_define_method(cCalcSun,
-  "t_mid_day", func_t_mid_day, 3);
+  "t_set", func_t_set, 3);
   rb_define_method(cCalcSun,
   "rise", func_rise, 3);
   rb_define_method(cCalcSun,

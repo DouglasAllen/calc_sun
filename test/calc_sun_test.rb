@@ -6,15 +6,12 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 #
-class CalcSunTest < Minitest::Test
+class CalcSunVersion < Minitest::Test
   def test_that_it_has_a_version_number
     refute_nil ::CalcSun::VERSION
   end
-
-  def test_it_does_something_useful
-    assert false
-  end
 end
+
 require 'date'
 #
 # class TestCalcSun < MiniTest::Test

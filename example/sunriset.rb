@@ -14,6 +14,7 @@ lat = 51.4770228
 lon = -0.0001147 / 360.0
 jd = day - CalcSun::DJ00 - lon
 puts
+puts Date.jd(day)
 cs.rise(jd, lon, lat)
 cs.noon(jd, lon)
 cs.set(jd, lon, lat)

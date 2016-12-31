@@ -69,6 +69,13 @@ and generate the RDoc.
         DateTime.jd(day.jd + cs.t_rise(jd, lon, lat) / 24.0)
         DateTime.jd(day.jd + cs.t_south(jd, lon) / 24.0)
         DateTime.jd(day.jd + cs.t_set(jd, lon, lat) / 24.0)
+        Date.jd(day)
+        # new FEATURES version 0.1.2
+        jd = day.jd - CalcSun::DJ00 - lon / 360.0
+        rise(jd, lon, lat)
+        cs.noon(jd, lon)
+        cs.set(jd, lon, lat)
+
 
 
 == LICENSE:

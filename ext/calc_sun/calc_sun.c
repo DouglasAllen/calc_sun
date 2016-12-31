@@ -11,6 +11,7 @@
 #define INV360 1.0 / 360.0
 #define DJ00 2451545.0
 
+// static ID id_status;
 
 static VALUE
 t_init(VALUE self)
@@ -26,7 +27,7 @@ func_rev12(VALUE self, VALUE vx)
 }
 
 static VALUE
-func_mean_anomally(VALUE self, VALUE vd)
+func_mean_anomaly(VALUE self, VALUE vd)
 {
   double d = NUM2DBL(vd);
   double vma =
@@ -51,7 +52,7 @@ static VALUE
 func_equation_of_center(VALUE self, VALUE vd)
 {
   double vma =
-  NUM2DBL(func_mean_anomally(self, vd));
+  NUM2DBL(func_mean_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double ve2 = ve * 2.0;
@@ -66,10 +67,10 @@ func_equation_of_center(VALUE self, VALUE vd)
 }
 
 static VALUE
-func_true_anomally(VALUE self, VALUE vd)
+func_true_anomaly(VALUE self, VALUE vd)
 {
   double vma =
-  NUM2DBL(func_mean_anomally(self, vd));
+  NUM2DBL(func_mean_anomaly(self, vd));
   double veoc =
   NUM2DBL(func_equation_of_center(self, vd));
   double vta = vma + veoc;
@@ -89,7 +90,7 @@ func_mean_longitude(VALUE self, VALUE vd)
 }
 
 static VALUE
-func_eccentric_anomally(VALUE self, VALUE vd)
+func_eccentric_anomaly(VALUE self, VALUE vd)
 {
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
@@ -125,7 +126,7 @@ static VALUE
 func_xv(VALUE self, VALUE vd)
 {
   double vea =
-  NUM2DBL(func_eccentric_anomally(self, vd));
+  NUM2DBL(func_eccentric_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double vxv = cos(vea) - ve;
@@ -136,7 +137,7 @@ static VALUE
 func_yv(VALUE self, VALUE vd)
 {
   double vea =
-  NUM2DBL(func_eccentric_anomally(self, vd));
+  NUM2DBL(func_eccentric_anomaly(self, vd));
   double ve =
   NUM2DBL(func_eccentricity(self, vd));
   double vyv =
@@ -148,7 +149,7 @@ static VALUE
 func_true_longitude(VALUE self, VALUE vd)
 {
   double vta =
-  NUM2DBL(func_true_anomally(self, vd));
+  NUM2DBL(func_true_anomaly(self, vd));
   double vlop =
   NUM2DBL(func_longitude_of_perihelion(self, vd));
   double vtl =
@@ -303,32 +304,54 @@ func_t_mid_day(VALUE self, VALUE vjd, VALUE vlon, VALUE vlat)
   return DBL2NUM((tr + ts) / 2.0);
 }
 
+static VALUE
+func_rise(VALUE self, VALUE vjd, VALUE vlat, VALUE vlon){
+  double rt = NUM2DBL(func_t_rise(self, vjd, vlat, vlon));
+  printf("\tSun rises \t\t\t : %2.0f:%02.0f \n",
+  floor(rt), floor(fmod(rt, 1) * 60.0));
+  return Qnil;
+}
+
+static VALUE
+func_noon(VALUE self, VALUE vjd, VALUE vlon){
+  double nt = NUM2DBL(func_t_south(self, vjd, vlon));
+  printf("\tSun midday \t\t\t : %2.0f:%02.0f \n",
+  floor(nt), floor(fmod(nt, 1) * 60.0));
+  return Qnil;
+}
+
+static VALUE
+func_set(VALUE self, VALUE vjd, VALUE vlat, VALUE vlon){
+  double st = NUM2DBL(func_t_set(self, vjd, vlat, vlon));
+  printf("\tSun sets \t\t\t : %2.0f:%02.0f \n",
+  floor(st), floor(fmod(st, 1) * 60.0));
+  return Qnil;
+}
+
 void Init_calc_sun(void)
 {
   VALUE cCalcSun =
   rb_define_class("CalcSun", rb_cObject);
   rb_define_method(cCalcSun, "initialize", t_init, 0);
+  rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
   rb_define_method(cCalcSun,
   "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun,
-  "mean_anomally", func_mean_anomally, 1);
+  "mean_anomaly", func_mean_anomaly, 1);
   rb_define_method(cCalcSun,
   "eccentricity", func_eccentricity, 1);
   rb_define_method(cCalcSun,
   "equation_of_center", func_equation_of_center, 1);
   rb_define_method(cCalcSun,
-  "true_anomally", func_true_anomally, 1);
+  "true_anomaly", func_true_anomaly, 1);
   rb_define_method(cCalcSun,
   "mean_longitude", func_mean_longitude, 1);
   rb_define_method(cCalcSun,
-  "eccentric_anomally",
-  func_eccentric_anomally, 1);
+  "eccentric_anomaly", func_eccentric_anomaly, 1);
   rb_define_method(cCalcSun,
-  "obliquity_of_ecliptic",
-  func_obliquity_of_ecliptic, 1);
+  "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun,
-  "longitude_of_perihelion",
-  func_longitude_of_perihelion, 1);
+  "longitude_of_perihelion", func_longitude_of_perihelion, 1);
   rb_define_method(cCalcSun,
   "xv", func_xv, 1);
   rb_define_method(cCalcSun,
@@ -361,4 +384,10 @@ void Init_calc_sun(void)
   "t_set", func_t_set, 3);
   rb_define_method(cCalcSun,
   "t_mid_day", func_t_mid_day, 3);
+  rb_define_method(cCalcSun,
+  "rise", func_rise, 3);
+  rb_define_method(cCalcSun,
+  "noon", func_noon, 2);
+  rb_define_method(cCalcSun,
+  "set", func_set, 3);
 }

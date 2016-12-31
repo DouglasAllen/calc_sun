@@ -63,26 +63,26 @@ and generate the RDoc.
         lon = -0.0001147
         day = Date.parse('2016-12-25').jd
         jd = day - DJ00 - lon / 360.0
-        cs.t_rise(jd, lon, lat)
-        cs.t_mid_day(jd, lon, lat)
+        cs.t_rise(jd, lat, lon)
+        cs.t_mid_day(jd, lat, lon)
         cs.t_set(jd, lon, lat)
-        DateTime.jd(day + cs.t_rise(jd, lon, lat) / 24.0)
-        DateTime.jd(day + cs.t_south(jd, lon) / 24.0)
-        DateTime.jd(day + cs.t_set(jd, lon, lat) / 24.0)
+        DateTime.jd(day + cs.t_rise(jd, lat, lon) / 24.0)
+        DateTime.jd(day + cs.t_south(jd, lat, lon) / 24.0)
+        DateTime.jd(day + cs.t_set(jd, lat, lon) / 24.0)
         Date.jd(day)
         # new FEATURES version 0.1.2
         jd = day - CalcSun::DJ00 - lon / 360.0
-        cs.rise(jd, lon, lat)
-        cs.noon(jd, lon)
-        cs.set(jd, lon, lat)
+        cs.rise(jd, lat, lon)
+        cs.noon(jd, lat, lon)
+        cs.set(jd, lat, lon)
         day_array = ['2016-4-14', '2016-6-15', '2016-8-31', '2016-12-25']
         (0..3).each do |i|
           day = Date.parse(day_array[i]).jd
           jd = day - CalcSun::DJ00 - lon / 360.0
           p Date.jd(day)
-          cs.rise(jd, lon, lat)
-          cs.noon(jd, lon)
-          cs.set(jd, lon, lat)
+          cs.rise(jd, lat, lon)
+          cs.noon(jd, lat, lon)
+          cs.set(jd, lat, lon)
         end
 
 

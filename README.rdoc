@@ -66,9 +66,9 @@ and generate the RDoc.
         cs.t_rise(jd, lon, lat)
         cs.t_mid_day(jd, lon, lat)
         cs.t_set(jd, lon, lat)
-        DateTime.jd(day.jd + cs.t_rise(jd, lon, lat) / 24.0)
-        DateTime.jd(day.jd + cs.t_south(jd, lon) / 24.0)
-        DateTime.jd(day.jd + cs.t_set(jd, lon, lat) / 24.0)
+        DateTime.jd(day + cs.t_rise(jd, lon, lat) / 24.0)
+        DateTime.jd(day + cs.t_south(jd, lon) / 24.0)
+        DateTime.jd(day + cs.t_set(jd, lon, lat) / 24.0)
         Date.jd(day)
         # new FEATURES version 0.1.2
         jd = day.jd - CalcSun::DJ00 - lon / 360.0

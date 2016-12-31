@@ -71,7 +71,7 @@ and generate the RDoc.
         DateTime.jd(day + cs.t_set(jd, lon, lat) / 24.0)
         Date.jd(day)
         # new FEATURES version 0.1.2
-        jd = day.jd - CalcSun::DJ00 - lon / 360.0
+        jd = day - CalcSun::DJ00 - lon / 360.0
         cs.rise(jd, lon, lat)
         cs.noon(jd, lon)
         cs.set(jd, lon, lat)

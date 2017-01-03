@@ -1,7 +1,7 @@
 
 gem 'minitest'
 require 'minitest/autorun'
-require 'test/unit'
+# require 'test/unit'
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
@@ -14,8 +14,7 @@ end
 
 require 'date'
 #
-# class TestCalcSun < MiniTest::Test
-class TestCalcSun100 < Test::Unit::TestCase
+class TestCalcSun100 < MiniTest::Test # Test::Unit::TestCase
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0
@@ -109,7 +108,7 @@ class TestCalcSun100 < Test::Unit::TestCase
 end
 
 #
-class TestCalcSun200 < Test::Unit::TestCase
+class TestCalcSun200 <  MiniTest::Test # Test::Unit::TestCase
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0

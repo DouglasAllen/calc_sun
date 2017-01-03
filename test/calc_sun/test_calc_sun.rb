@@ -1,12 +1,13 @@
 
 gem 'minitest'
 require 'minitest/autorun'
+
 # require 'test/unit'
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 #
-class CalcSunVersion < Minitest::Test
+class CalcSunVersion < Minitest::Test # Test::Unit::TestCase
   def test_that_it_has_a_version_number
     refute_nil ::CalcSun::VERSION
   end

@@ -8,11 +8,13 @@ cs = CalcSun.new
 
 require 'date'
 # DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
+# 2451545.0
 
-day = Date.parse('2016-12-25').jd
+# day = Date.parse('2017-01-01').jd
+day = Date.today.jd
 lat = 51.4770228
-lon = -0.0001147 / 360.0
-jd = day - CalcSun::DJ00 - lon
+lon = -0.0001147
+jd = day - CalcSun::DJ00 - lon / 360.0
 puts
 puts Date.jd(day)
 cs.rise(jd, lat, lon)
@@ -31,9 +33,9 @@ cs.set(jd, lat, lon)
 # printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
 #        set.floor, (set % 1 * 60.0).floor)
 
-n = 1_000_000
-Benchmark.bm(7) do |x|
-  x.report('rise:') { n.times { ; cs.t_rise(jd, lat, lon); } }
-  x.report('midday:') { n.times { ; cs.t_mid_day(jd, lat, lon); } }
-  x.report('set:') { n.times { ; cs.t_set(jd, lat, lon); } }
-end
+# n = 1_000_000
+# Benchmark.bm(7) do |x|
+#   x.report('rise:') { n.times { ; cs.t_rise(jd, lat, lon); } }
+#   x.report('midday:') { n.times { ; cs.t_mid_day(jd, lat, lon); } }
+#   x.report('set:') { n.times { ; cs.t_set(jd, lat, lon); } }
+# end

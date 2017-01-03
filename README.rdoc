@@ -1,4 +1,4 @@
-
+{<img src="https://travis-ci.org/DouglasAllen/calc_sun.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/DouglasAllen/calc_sun]
 = calc_sun
 
 Home    :: https://rubygems.org/gems/calc_sun

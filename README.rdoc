@@ -56,13 +56,13 @@ and generate the RDoc.
         require 'calc_sun'
         cs = CalcSun.new
         require 'date'
-        # not included yet for determining your mean time
-        DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
 
         lat = 51.4770228
         lon = -0.0001147
-        day = Date.parse('2016-12-25').jd
-        jd = day - DJ00 - lon / 360.0
+        day = Date.parse('2016-12-25')
+        day.jd
+        jd = cs.df2000(day, lon)
+        jd
         cs.t_rise(jd, lat, lon)
         cs.t_mid_day(jd, lat, lon)
         cs.t_set(jd, lon, lat)
@@ -77,9 +77,9 @@ and generate the RDoc.
         cs.set(jd, lat, lon)
         day_array = ['2016-4-14', '2016-6-15', '2016-8-31', '2016-12-25']
         (0..3).each do |i|
-          day = Date.parse(day_array[i]).jd
-          jd = day - CalcSun::DJ00 - lon / 360.0
-          p Date.jd(day)
+          day = Date.parse(day_array[i]).
+          jd = cs.df2000(day, lon)
+          p day.jd
           cs.rise(jd, lat, lon)
           cs.noon(jd, lat, lon)
           cs.set(jd, lat, lon)

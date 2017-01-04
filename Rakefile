@@ -10,7 +10,7 @@ Hoe.plugin :minitest
 Hoe.plugin :test
 
 Hoe.spec 'calc_sun' do
-  self.version = '0.1.1'
+  self.version = '1.2.6'
   developer('kb9agt', 'kb9agt@gmail.com')
   self.readme_file   = 'README.rdoc'
   self.history_file  = 'HISTORY.rdoc'

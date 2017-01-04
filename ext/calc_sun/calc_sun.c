@@ -1,5 +1,10 @@
 #include <ruby.h>
-
+#include <math.h>
+#include <time.h>
+/* if PI's not defined, define it */
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
 #ifndef DBL2NUM
 # define DBL2NUM(dbl) rb_float_new(dbl)
 #endif
@@ -9,7 +14,101 @@
 # define INV24 1.0 / 24.0
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0
+/* conversion ratio for Astronomical Units */
+#ifndef AU_TO_KM
+#define AU_TO_KM 1496.13400
+#endif
+/* define two-pi and how to get Radians */
+#ifndef TWOPI
+#define TWOPI 2*PI
+#endif
 
+#ifndef RADS
+#define RADS PI/180
+#endif
+
+/* define constants for getting planet position */
+#define DATE_OF_ELEMENTS 2450680.5
+#define DATE_OF_MEAN_ELEMENTS 2451545
+
+#define ELDATE (DATE_OF_ELEMENTS - 2451545)
+
+/* setup for objectinfo array */
+#define NUM_OF_OBJECTS 10
+#define PIECES_OF_INFO 7
+#define NUM_XYZ       3
+
+double xyz[NUM_OF_OBJECTS][NUM_XYZ] = {
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 },
+  { 0.0, 0.0, 0.0 }
+};
+
+/*   below are the osculating elements for JD = 2450680.5
+referred to mean ecliptic and equinox of J2000
+i - inclination
+o - longitude of ascending node at date of elements
+p - longitude of perihelion at date of elements
+a - mean distance (au)
+n - daily motion
+e - eccentricity of orbit
+l - mean longitude at date of elements
+   objectinfo is a 2-dimentional array with all planetary info
+   implemented as [object][info]
+   The info is in the order of i o p a n e l */
+
+double objectinfo[NUM_OF_OBJECTS][PIECES_OF_INFO] = {
+{/* Mercury */
+1.22615358, 0.84358570, 1.35182732, 0.3870978, 0.07142503, 0.2056324, 5.48772864},
+{/* Venus */
+0.05924904, 1.33847380, 2.29966328, 0.7233238, 0.02796293, 0.0067933, 4.13539098},
+{/* Earth */
+0.00000715, 6.09468974, 1.79510081, 1.00002, 0.01720161, 0.0166967, 5.73172287},
+{/* Mars */
+0.03228719, 0.86509687, 5.86584567, 1.5236365, .0091466, 0.0934231, 4.58022986},
+{/* Jupiter */
+0.02277009, 1.75355499, 0.2739783, 5.202597, 0.0014503, 0.0484646, 5.62973107},
+{/* Saturn */
+0.04337562, 1.98331886, 1.55095193, 9.57189999, 0.00058096, 0.0531651, 0.36577895},
+{/* Uranus */
+0.0134989, 1.29320869, 3.06620665, 19.30181, 0.00202859, 0.0428959, 5.291658},
+{/* Neptune */
+0.03085917, 2.30021305, 0.12576843, 30.26664, .00010331, 0.0102981, 5.23361585},
+{/* Pluto */
+0.29882429, 1.92655202, 3.92354379, 39.5804, .00006908, 0.2501272, 4.11488598},
+{/* Earth's Moon */
+0.02373719, 2.18380483, 1.45187308, 26176.3035239/* km */, 0.22807144, 0.054900, 5.73172287}
+};
+
+#define FLOOR(a) lrintf(floorf(a))
+#define FLOAT(a) (float)a
+static VALUE JULIAN;        /* Date::JULIAN */
+static VALUE GREGORIAN;     /* Date::GREGORIAN */
+static VALUE ITALY;         /* Date::ITALY */
+
+static inline int
+civil_to_jd(int y, int m, int d, VALUE sg)
+{
+  int a, b, jd;
+  if ( m <= 2 ) {
+    y-= 1;
+    m+= 12;
+  }
+  a = y / 100;
+  b = 2 - a + (a / 4);
+  jd = FLOOR(365.25 * (y + 4716)) +
+    FLOOR(30.6001 * (m + 1)) +
+    d + b - 1524;
+  if ( sg == JULIAN || (sg != GREGORIAN && jd < FIX2INT(sg)) )
+    jd -= b;
+  return jd;
+}
 
 static VALUE t_init(VALUE self){
   return self;
@@ -270,10 +369,44 @@ static VALUE func_set(VALUE self, VALUE vjd, VALUE vlat, VALUE vlon){
   return Qnil;
 }
 
+/* Get the days to J2000 h is UT in decimal hours only works between 1901 to 2099 */
+static inline double
+GetDaysTillJ2000(int year, int month, int day, double hours){
+     double days_till_J2000;
+     days_till_J2000 = 367 * year - 7 * (year + (month + 9) / 12) / 4 + 275 * month / 9 + day - 730531.5 + hours / 24;
+     return(days_till_J2000);
+}
+
+static VALUE func_get_jd(VALUE self, VALUE vdate_time){
+  int year = NUM2INT(rb_funcall(vdate_time, rb_intern("year"), 0));
+  int month = NUM2INT(rb_funcall(vdate_time, rb_intern("month"), 0));
+  int day = NUM2INT(rb_funcall(vdate_time, rb_intern("day"), 0));
+  double jd = civil_to_jd(year, month, day, ITALY) - 13;
+  return DBL2NUM(jd);
+}
+
+static VALUE func_jd_from_2000(VALUE self, VALUE vdate_time){
+  int year = NUM2INT(rb_funcall(vdate_time, rb_intern("year"), 0));
+  int month = NUM2INT(rb_funcall(vdate_time, rb_intern("month"), 0));
+  int day = NUM2INT(rb_funcall(vdate_time, rb_intern("day"), 0));
+  double days = GetDaysTillJ2000(year, month, day, 12);
+  return DBL2NUM(days);
+}
+
+static VALUE func_days_from_2000(VALUE self, VALUE vdate_time, VALUE vlon){
+  double jd = NUM2DBL(func_get_jd(self, vdate_time));
+  double lon = NUM2DBL(vlon);
+  double days = jd - DJ00 - lon / 360;
+  return DBL2NUM(days);
+}
+
 void Init_calc_sun(void){
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
   rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
+  rb_define_method(cCalcSun, "jd", func_get_jd, 1);
+  rb_define_method(cCalcSun, "a2000", func_jd_from_2000, 1);
+  rb_define_method(cCalcSun, "df2000", func_days_from_2000, 2);
   rb_define_method(cCalcSun, "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun, "mean_anomaly", func_mean_anomaly, 1);
   rb_define_method(cCalcSun, "eccentricity", func_eccentricity, 1);

@@ -3,7 +3,7 @@ gem 'minitest'
 require 'minitest/autorun'
 
 # require 'test/unit'
-lib = File.expand_path('../../lib', __FILE__)
+lib = File.expand_path('../../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 #
@@ -109,7 +109,7 @@ class TestCalcSun100 < MiniTest::Test # Test::Unit::TestCase
 end
 
 #
-class TestCalcSun200 <  MiniTest::Test # Test::Unit::TestCase
+class TestCalcSun200 < MiniTest::Test # Test::Unit::TestCase
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0
@@ -223,5 +223,30 @@ class TestCalcSun200 <  MiniTest::Test # Test::Unit::TestCase
       "Sun sets \t\t\t : 18:6 UTC",
       "Sun sets \t\t\t : #{set.floor}:#{(set % 1 * 60.0).floor} UTC"
     )
+  end
+end
+
+#
+class TestCalcSun300 < MiniTest::Test # Test::Unit::TestCase
+  def setup
+    @t = CalcSun.new
+    @t_ajd = 0.0
+    @t_lat = 0.0
+    @t_lon = 0.0
+  end
+
+  def test_jd
+    dt_obj = DateTime.new(2017, 1, 3)
+    assert_equal(dt_obj.jd, @t.jd(dt_obj))
+  end
+
+  def test_a2000
+    dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
+    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.a2000(dt_obj))
+  end
+
+  def test_df2000
+    dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
+    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.df2000(dt_obj, @t_lon))
   end
 end

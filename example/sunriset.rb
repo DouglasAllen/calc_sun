@@ -4,19 +4,17 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 
+lat = 51.4770228
+lon = -0.0001147
+
 cs = CalcSun.new
 
 require 'date'
-# DJ00 = DateTime.parse('2000-01-01T12:00:00').jd
-# 2451545.0
+day = Date.today
+puts day.jd
 
-# day = Date.parse('2017-01-01').jd
-day = Date.today.jd
-lat = 51.4770228
-lon = -0.0001147
-jd = day - CalcSun::DJ00 - lon / 360.0
-puts
-puts Date.jd(day)
+jd = cs.df2000(day, lon)
+puts jd
 cs.rise(jd, lat, lon)
 cs.noon(jd, lat, lon)
 cs.set(jd, lat, lon)

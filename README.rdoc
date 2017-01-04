@@ -76,8 +76,8 @@ and generate the RDoc.
         cs.rise(jd, lat, lon)
         cs.noon(jd, lat, lon)
         cs.set(jd, lat, lon)
-
-        day_array = ['2016-4-14', '2016-6-15', '2016-8-31', '2016-12-25']
+        # Equation of time is near zero on these dates. Check Noon.
+        day_array = ['2017-4-14', '2017-6-15', '2017-8-31', '2017-12-25']
         (0..3).each do |i|
           day = Date.parse(day_array[i])
           jd = cs.df2000(day, lon)

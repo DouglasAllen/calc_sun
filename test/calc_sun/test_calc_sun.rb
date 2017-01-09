@@ -1,13 +1,14 @@
 
-gem 'minitest'
-require 'minitest/autorun'
+require 'rubygems'
+# gem 'minitest'
+# require 'minitest/autorun'
 
-# require 'test/unit'
+require 'test/unit'
 lib = File.expand_path('../../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 #
-class CalcSunVersion < Minitest::Test # Test::Unit::TestCase
+class CalcSunVersion < Test::Unit::TestCase #  Minitest::Test
   def test_that_it_has_a_version_number
     refute_nil ::CalcSun::VERSION
   end
@@ -15,9 +16,10 @@ end
 
 require 'date'
 #
-class TestCalcSun100 < MiniTest::Test # Test::Unit::TestCase
+class TestCalcSun100 < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
+    @t_date = Date.parse('2017-01-03')
     @t_ajd = 0.0
     @t_lat = 0.0
     @t_lon = 0.0
@@ -26,7 +28,7 @@ class TestCalcSun100 < MiniTest::Test # Test::Unit::TestCase
   def test_mean_anomaly
     assert_equal(
       6.240059966692,
-      @t.mean_anomaly(@t_ajd).round(12)
+      @t.mean_anomaly().round(12)
     )
   end
 
@@ -100,16 +102,16 @@ class TestCalcSun100 < MiniTest::Test # Test::Unit::TestCase
     )
   end
 
-  def test_rv
+  def test_radius_vector
     assert_equal(
       0.997235842199,
-      @t.rv(@t_ajd).round(12)
+      @t.radius_vector(@t_ajd).round(12)
     )
   end
 end
 
 #
-class TestCalcSun200 < MiniTest::Test # Test::Unit::TestCase
+class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0
@@ -159,10 +161,10 @@ class TestCalcSun200 < MiniTest::Test # Test::Unit::TestCase
     )
   end
 
-  def test_dlt
+  def test_daylight_time
     assert_equal(
       12.120732161881,
-      @t.dlt(@t_ajd, @t_lat).round(12)
+      @t.daylight_time(@t_ajd, @t_lat).round(12)
     )
   end
 
@@ -227,7 +229,7 @@ class TestCalcSun200 < MiniTest::Test # Test::Unit::TestCase
 end
 
 #
-class TestCalcSun300 < MiniTest::Test # Test::Unit::TestCase
+class TestCalcSun300 < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
     @t_ajd = 0.0
@@ -240,13 +242,13 @@ class TestCalcSun300 < MiniTest::Test # Test::Unit::TestCase
     assert_equal(dt_obj.jd, @t.jd(dt_obj))
   end
 
-  def test_a2000
+  def test_jd2000_dif
     dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
-    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.a2000(dt_obj))
+    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.jd2000_dif(dt_obj))
   end
 
-  def test_df2000
+  def test_jd2000_dif_lon
     dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
-    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.df2000(dt_obj, @t_lon))
+    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.jd2000_dif_lon(dt_obj, @t_lon))
   end
 end

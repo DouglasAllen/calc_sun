@@ -15,30 +15,6 @@
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0L
 
-
-#define FLOOR(a) lrintf(floorf(a))
-#define FLOAT(a) (float)a
-static VALUE JULIAN;        /* Date::JULIAN */
-static VALUE GREGORIAN;     /* Date::GREGORIAN */
-static VALUE ITALY;         /* Date::ITALY */
-
-static inline int
-civil_to_jd(int y, int m, int d, VALUE sg)
-{
-  int a, b, jd;
-  if ( m <= 2 ) {
-    y-= 1;
-    m+= 12;
-  }
-  a = y / 100;
-  b = 2 - a + (a / 4);
-  jd = FLOOR(365.25 * (y + 4716)) +
-    FLOOR(30.6001 * (m + 1)) +
-    d + b - 1524;
-  if ( sg == JULIAN || (sg != GREGORIAN && jd < FIX2INT(sg)) )
-    jd -= b;
-  return jd;
-}
 /*
  * call-seq:
  *  initialize()
@@ -49,16 +25,48 @@ civil_to_jd(int y, int m, int d, VALUE sg)
 static VALUE t_init(VALUE self){
   return self;
 }
-
+/*
+ * call-seq:
+ *  date('yyyy-mm-dd')
+ *
+ * convert input string to Date object.
+ *
+ */
+static VALUE func_get_date(VALUE self, VALUE vdate){
+  VALUE cDate = rb_const_get(rb_cObject, rb_intern("Date"));
+  VALUE parsed = rb_funcall(cDate, rb_intern("parse"), 1, vdate);
+  return parsed;
+}
+/*
+ * call-seq:
+ *  jd(date)
+ *
+ * convert Date or DateTime object to JD number.
+ *
+ */
 static VALUE func_get_jd(VALUE self, VALUE vdate){
-  int year = NUM2INT(rb_funcall(vdate, rb_intern("year"), 0));
-  int month = NUM2INT(rb_funcall(vdate, rb_intern("month"), 0));
-  int day = NUM2INT(rb_funcall(vdate, rb_intern("day"), 0));
-  double jd = civil_to_jd(year, month, day, ITALY) - 13;
+  double jd = NUM2DBL(rb_funcall(vdate, rb_intern("jd"), 0));
   return DBL2NUM(jd);
 }
-
-
+/*
+ * call-seq:
+ *  ajd(date)
+ *
+ * convert Date or DateTime object to AJD number.
+ *
+ */
+static VALUE func_get_ajd(VALUE self, VALUE vdate){
+  double ajd = NUM2DBL(rb_funcall(vdate, rb_intern("ajd"), 0));
+  return DBL2NUM(ajd);
+}
+/*
+ * call-seq:
+ *  mean_anomaly(date)
+ *
+ * convert Date or DateTime object to float
+ * representing Solar Mean Anomaly in radians.
+ *
+ */
 static VALUE func_mean_anomaly(VALUE self, VALUE vdate){
   double jd = NUM2DBL(func_get_jd(self, vdate));
   double d = jd - DJ00;
@@ -338,17 +346,34 @@ static VALUE func_days_from_2000(VALUE self, VALUE vdate, VALUE vlon){
   return DBL2NUM(days);
 }
 
+static VALUE func_eot(VALUE self, VALUE vdate){
+  double ma =
+  NUM2DBL(func_mean_anomaly(self, vdate));
+  double ta =
+  NUM2DBL(func_true_anomaly(self, vdate));
+  double tl =
+  NUM2DBL(func_true_longitude(self, vdate));
+  double ra = 15.0 * D2R *
+  NUM2DBL(func_right_ascension(self, vdate));
+  return DBL2NUM(fmod((ma - ta + tl - ra), M2PI));
+}
+
+static VALUE func_eot_min(VALUE self, VALUE vdate){
+  double eot = NUM2DBL(func_eot(self, vdate));
+  return DBL2NUM(eot * R2D / 15 * 60);
+}
+
 static VALUE func_rev12(VALUE self, VALUE vx){
   double x = NUM2DBL(vx);
   return DBL2NUM(x - 24.0 * floor(x * INV24 + 0.5));
 }
 
-VALUE rb_time;
-
 void Init_calc_sun(void){
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
   rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
+  rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
+  rb_define_method(cCalcSun, "date", func_get_date, 1);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);
   rb_define_method(cCalcSun, "declination", func_declination, 1);
   rb_define_method(cCalcSun, "diurnal_arc", func_diurnal_arc, 2);
@@ -356,7 +381,9 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "eccentric_anomaly", func_eccentric_anomaly, 1);
   rb_define_method(cCalcSun, "ecliptic_x", func_ecliptic_x, 1);
   rb_define_method(cCalcSun, "ecliptic_y", func_ecliptic_y, 1);
+  rb_define_method(cCalcSun, "eot_min", func_eot_min, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
+  rb_define_method(cCalcSun, "equation_of_time", func_eot, 1);
   rb_define_method(cCalcSun, "jd", func_get_jd, 1);
   rb_define_method(cCalcSun, "jd2000_dif", func_jd_from_2000, 1);
   rb_define_method(cCalcSun, "jd2000_dif_lon", func_days_from_2000, 2);

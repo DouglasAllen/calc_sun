@@ -73,10 +73,12 @@ and generate the RDoc.
 
         # Equation of time is near zero on these dates. Check Noon.
         day_array = ['2017-04-14', '2017-04-15', '2017-06-12', '2017-06-13', '2017-08-31', '2017-09-01', '2017-12-24', '2017-12-25']
+        require 'eot'
+        eot = Eot.new
         (0..day_array.length - 1).each do |i|
           day = cs.date(day_array[i])
           p day.to_s
-          p cs.eot_min(day)
+          p eot.show_minutes(cs.eot_min(day))
           cs.noon(day, lat, lon)
         end
 

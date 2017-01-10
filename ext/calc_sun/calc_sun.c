@@ -32,12 +32,10 @@ static VALUE t_init(VALUE self){
  * convert input string to Date object.
  *
  */
-static VALUE func_get_date(VALUE self, VALUE vdate){
+static VALUE func_set_date(VALUE self, VALUE vdate){
   VALUE cDate = rb_const_get(rb_cObject, rb_intern("Date"));
-  // VALUE rb_date = rb_funcall(cDate, rb_intern("new"), 0);
-  VALUE parsed = rb_funcall(cDate, rb_intern("parse"), 1, vdate);
-
-  return parsed;
+  VALUE day = rb_funcall(cDate, rb_intern("parse"), 1, vdate);
+  return day;
 }
 /*
  * call-seq:
@@ -365,6 +363,10 @@ static VALUE func_eot_min(VALUE self, VALUE vdate){
   return DBL2NUM(eot * R2D / 15 * 60);
 }
 
+static VALUE func_min_to_s(VALUE self, VALUE vmin){
+  return Qnil;
+}
+
 static VALUE func_rev12(VALUE self, VALUE vx){
   double x = NUM2DBL(vx);
   return DBL2NUM(x - 24.0 * floor(x * INV24 + 0.5));
@@ -372,10 +374,15 @@ static VALUE func_rev12(VALUE self, VALUE vx){
 
 void Init_calc_sun(void){
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
-  rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
+  rb_require("date");
+  // rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
+  //VALUE cDate = rb_const_get(rb_cObject, rb_intern("Date"));
+  //VALUE rb_date = rb_funcall(cDate, rb_intern("new"), 0);
+  //rb_iv_set(self, "@date", rb_date);
   rb_define_method(cCalcSun, "initialize", t_init, 0);
+  rb_define_attr(cCalcSun, "date", 1, 1);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
-  rb_define_method(cCalcSun, "date", func_get_date, 1);
+  rb_define_method(cCalcSun, "sdate", func_set_date, 1);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);
   rb_define_method(cCalcSun, "declination", func_declination, 1);
   rb_define_method(cCalcSun, "diurnal_arc", func_diurnal_arc, 2);
@@ -393,6 +400,7 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "longitude_of_perihelion", func_longitude_of_perihelion, 1);
   rb_define_method(cCalcSun, "mean_anomaly", func_mean_anomaly, 1);
   rb_define_method(cCalcSun, "mean_longitude", func_mean_longitude, 1);
+  rb_define_method(cCalcSun, "min_to_s", func_min_to_s, 1);
   rb_define_method(cCalcSun, "noon", func_noon, 3);
   rb_define_method(cCalcSun, "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun, "radius_vector", func_rv, 1);

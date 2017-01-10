@@ -267,12 +267,14 @@ class TestCalcSun300 < Test::Unit::TestCase # MiniTest::Test
 
   def test_jd2000_dif
     dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
-    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.jd2000_dif(dt_obj))
+    dt_2000 = DateTime.new(2000, 1, 1, 12)
+    assert_equal(dt_obj.jd - dt_2000.jd, @t.jd2000_dif(dt_obj))
   end
 
   def test_jd2000_dif_lon
     dt_obj = DateTime.new(2017, 1, 3, 4, 5, 6)
-    assert_equal(dt_obj.jd - CalcSun::DJ00, @t.jd2000_dif_lon(dt_obj, @t_lon))
+    dt_2000 = DateTime.new(2000, 1, 1, 12)
+    assert_equal(dt_obj.jd - dt_2000.jd, @t.jd2000_dif_lon(dt_obj, @t_lon))
   end
 
   def test_equation_of_time
@@ -285,8 +287,8 @@ class TestCalcSun300 < Test::Unit::TestCase # MiniTest::Test
                  @t.eot_min(@t_date).round(12))
   end
 
-  def test_date
-    assert_equal(@t_date, @t.date(@t_date_str))
+  def test_sdate
+    assert_equal(@t_date, @t.sdate(@t_date_str))
   end
 end
 

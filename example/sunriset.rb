@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'calc_sun'
 # require 'date' # for now we still need the Date class.
 
-date_str = '2017-01-09'
+date_str = Date.today.to_s
 lat = 51.4770228
 lon = -0.0001147
 

@@ -76,6 +76,7 @@ and generate the RDoc.
         (0..3).each do |i|
           day = cs.date(day_array[i])
           p day.to_s
+          p cs.eot_min(day)
           cs.rise(day, lat, lon)
           cs.noon(day, lat, lon)
           cs.set(day, lat, lon)

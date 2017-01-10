@@ -7,8 +7,8 @@ require 'rake/testtask'
 require 'rake/extensiontask'
 include Rake
 
-Hoe.plugin :bundler
-Hoe.plugin :manifest
+# Hoe.plugin :bundler
+# Hoe.plugin :manifest
 # Hoe.plugin :minitest
 # Hoe.plugin :test
 
@@ -22,12 +22,6 @@ Hoe.spec 'calc_sun' do
   self.history_file  = 'HISTORY.rdoc'
 
   self.extra_dev_deps += [
-    ['hoe-bundler',        '~> 1.2.0'],
-    ['hoe-debugging',      '~> 1.2.1'],
-    ['hoe-gemspec',        '~> 1.0.0'],
-    ['hoe-git',            '~> 1.6.0'],
-    ['minitest',           '~> 5.8.4'],
-    ['rake',               '~> 10.5.0'],
     ['rake-compiler',      '~> 0.9.2'],
     ['rake-compiler-dock', '~> 0.5.1']
   ]

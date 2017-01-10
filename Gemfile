@@ -4,13 +4,9 @@
 
 source 'https://rubygems.org/'
 
+gemspec
+
 gem 'hoe', '~>3.12', group: [:development, :test]
-gem 'hoe-bundler', '~>1.2.0', group: [:development, :test]
-gem 'hoe-debugging', '~>1.2.1', group: [:development, :test]
-gem 'hoe-gemspec', '~>1.0.0', group: [:development, :test]
-gem 'hoe-git', '~>1.6.0', group: [:development, :test]
-gem 'minitest', '~>5.8.4', group: [:development, :test]
-gem 'rake', '~>10.5.0', group: [:development, :test]
 gem 'rake-compiler', '~>0.9.2', group: [:development, :test]
 gem 'rake-compiler-dock', '~>0.5.1', group: [:development, :test]
 gem 'rdoc', '~>4.0', group: [:development, :test]

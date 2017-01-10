@@ -34,7 +34,9 @@ static VALUE t_init(VALUE self){
  */
 static VALUE func_get_date(VALUE self, VALUE vdate){
   VALUE cDate = rb_const_get(rb_cObject, rb_intern("Date"));
+  // VALUE rb_date = rb_funcall(cDate, rb_intern("new"), 0);
   VALUE parsed = rb_funcall(cDate, rb_intern("parse"), 1, vdate);
+
   return parsed;
 }
 /*
@@ -304,21 +306,21 @@ static VALUE func_t_set(VALUE self, VALUE vdate, VALUE vlat, VALUE vlon){
 
 static VALUE func_rise(VALUE self, VALUE vdate, VALUE vlat, VALUE vlon){
   double rt = NUM2DBL(func_t_rise(self, vdate, vlat, vlon));
-  printf("\tSun rises \t\t\t : %2.0f:%02.0f \n",
+  printf("\tSun rises \t\t\t : %2.0f:%02.0f UTC\n",
   floor(rt), floor(fmod(rt, 1) * 60.0));
   return Qnil;
 }
 
 static VALUE func_noon(VALUE self, VALUE vdate, VALUE vlat, VALUE vlon){
   double nt = NUM2DBL(func_t_south(self, vdate, vlon));
-  printf("\tSun midday \t\t\t : %2.0f:%02.0f \n",
+  printf("\tSun midday \t\t\t : %2.0f:%02.0f UTC\n",
   floor(nt), floor(fmod(nt, 1) * 60.0));
   return Qnil;
 }
 
 static VALUE func_set(VALUE self, VALUE vdate, VALUE vlat, VALUE vlon){
   double st = NUM2DBL(func_t_set(self, vdate, vlat, vlon));
-  printf("\tSun sets \t\t\t : %2.0f:%02.0f \n",
+  printf("\tSun sets \t\t\t : %2.0f:%02.0f UTC\n",
   floor(st), floor(fmod(st, 1) * 60.0));
   return Qnil;
 }
@@ -370,8 +372,8 @@ static VALUE func_rev12(VALUE self, VALUE vx){
 
 void Init_calc_sun(void){
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
-  rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
+  rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "date", func_get_date, 1);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);

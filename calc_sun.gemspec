@@ -23,5 +23,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
   spec.platform = Gem::Platform::RUBY
-  spec.add_development_dependency 'bundler', '~> 1.13'
+  spec.add_development_dependency 'bundler'#, '~> 1.13'
+  spec.add_development_dependency 'hoe-bundler'#, '~> 1.2', '>= 1.2.0'
+  spec.add_development_dependency 'hoe-debugging'#, '~> 1.2', '>= 1.2.1'
+  spec.add_development_dependency 'hoe-gemspec'#, '~> 1.0', '>= 1.0.0'
+  spec.add_development_dependency 'hoe-git'#, '~> 1.6', '>= 1.6.0'
+  spec.add_development_dependency 'minitest'#, '~> 5.8', '>= 5.8.4'
+  spec.add_development_dependency 'rake'#, '~> 10.5', '>= 10.5.0'
 end

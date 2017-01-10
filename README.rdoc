@@ -1,3 +1,5 @@
+Inspired by the work done on http://www.stjarnhimlen.se/comp/ppcomp.html#5
+
 {<img src="https://travis-ci.org/DouglasAllen/calc_sun.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/DouglasAllen/calc_sun]
 = calc_sun
 

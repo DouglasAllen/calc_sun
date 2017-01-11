@@ -26,10 +26,14 @@ Hoe.spec 'calc_sun' do
     ['rake-compiler-dock', '~> 0.5.1']
   ]
 
-  self.spec_extras = { extensions: ['ext/calc_sun/extconf.rb'] }
+  self.spec_extras = { extensions: ['ext/calc_sun/extconf.rb', 'ext/side_time/extconf.rb'] }
 
   ExtensionTask.new('calc_sun', spec) do |ext|
     ext.lib_dir = File.join('lib', 'calc_sun')
+  end
+
+  ExtensionTask.new('side_time', spec) do |ext|
+    ext.lib_dir = File.join('lib', 'side_time')
   end
 end
 
@@ -39,7 +43,7 @@ Task[:test].prerequisites << :compile
 TestTask.new(:test) do |t|
   t.libs << 'test'
   # t.libs << 'lib'
-  t.test_files = FileList['test/calc_sun/test_*.rb']
+  t.test_files = FileList['test/calc_sun/test_*.rb', 'test/side_time/test_*.rb']
 end
 
 task default: :test

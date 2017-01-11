@@ -1,5 +1,7 @@
 Inspired by the work done on http://www.stjarnhimlen.se/comp/ppcomp.html#5
 
+Hey not bad for a Windows machine aye? And I'm an old geek who didn't start programming until he was 50.
+
 {<img src="https://travis-ci.org/DouglasAllen/calc_sun.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/DouglasAllen/calc_sun]
 = calc_sun
 

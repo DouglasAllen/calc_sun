@@ -5,7 +5,7 @@ Inspired by the work done on http://www.stjarnhimlen.se/comp/ppcomp.html#5
 Hey not bad for a Windows machine aye? And I'm an old geek who didn't start programming until he was 50.
 
 {<img src="https://travis-ci.org/DouglasAllen/calc_sun.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/DouglasAllen/calc_sun]
-= calc_sun
+
 
 Home    :: https://rubygems.org/gems/calc_sun
 Code    :: https://github.com/DouglasAllen/calc_sun
@@ -13,22 +13,22 @@ RDoc    :: http://www.rubydoc.info/gems/calc_sun/0.1.1
 Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 
 
-== DESCRIPTION:
+=== DESCRIPTION:
 
 Calculate Sunrise and Sunset. Now uses native C extension.
 An example is supplied to show gem usage.
 
-== INSTALL:
+=== INSTALL:
 
   $> gem install calc_sun
 
-== DOWNLOAD:
+=== DOWNLOAD:
 
   $> git clone https://github.com/DouglasAllen/calc_sun.git
   $> cd calc_sun
   $> bundle install
 
-== Build with DEVKIT
+=== Build with DEVKIT
 
    cd to devkit dir and run devkitvars.bat
    or make a batchfile to start your envirnment with 'run devkitvars'
@@ -37,7 +37,7 @@ An example is supplied to show gem usage.
    $> rake gem
    $> gem install pkg/calc_sun-1.2.6.gem -l
 
-== DEVELOPERS:
+=== DEVELOPERS:
 
 After checking out the source, run:
 
@@ -46,17 +46,17 @@ After checking out the source, run:
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
 
-== FEATURES/PROBLEMS:
+=== FEATURES/PROBLEMS:
 
-  n/a
+  Consult issues if you want features or create pull requests.
 
-== SYNOPSIS:
+=== SYNOPSIS:
 
-=== start irb
+==== start irb
 
   $ irb --simple-prompt
 
-=== enter Code
+==== enter Code
 
         require 'date'
         require 'calc_sun'
@@ -87,7 +87,7 @@ and generate the RDoc.
           cs.noon(day, lat, lon)
         end
 
-== LICENSE:
+=== LICENSE:
 
 (The MIT License)
 

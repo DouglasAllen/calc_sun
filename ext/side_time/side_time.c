@@ -61,9 +61,9 @@ static VALUE func_get_ajd(VALUE self, VALUE vdate){
 }
 /*
  * call-seq:
- *  sidereal_time(date)
+ *  gmst(date)
  *
- * convert Date or DateTime object to AJD number.
+ * calculate Greenwhich Mean Sidereal Time.
  *
  */
 static VALUE func_mean_sidetime(VALUE self, VALUE vdate){
@@ -82,8 +82,23 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vdate){
   sidereal *= 24.0 / 360.0;
   return DBL2NUM(sidereal);
 }
-
-
+/*
+ * call-seq:
+ *  lmst(date)
+ *
+ * calculate Local Mean Sidereal Time.
+ *
+ */
+static VALUE func_local_sidetime(VALUE self, VALUE vdate, VALUE vlon){
+  double sidereal;
+  double ls;
+  double lon = NUM2DBL(vlon);
+  sidereal = NUM2DBL(func_mean_sidetime(self, vdate));
+  sidereal *= 15.0;
+  ls = sidereal + lon;
+  ls *= 24.0 / 360.0;
+  return DBL2NUM(ls);
+}
 
 
 void Init_side_time(void){
@@ -96,6 +111,6 @@ void Init_side_time(void){
   rb_define_method(cSideTime, "jd", func_get_jd, 1);
   //rb_define_method(cSideTime, "jd2000_dif", func_jd_from_2000, 1);
   //rb_define_method(cSideTime, "jd2000_dif_lon", func_days_from_2000, 2);
-  //rb_define_method(cSideTime, "local_sidereal_time", func_local_sidetime, 2);
-  rb_define_method(cSideTime, "mean_sidereal_time", func_mean_sidetime, 1);
+  rb_define_method(cSideTime, "lmst", func_local_sidetime, 2);
+  rb_define_method(cSideTime, "gmst", func_mean_sidetime, 1);
 }

@@ -1,10 +1,11 @@
-# askgeo_query.rb
 
+# askgeo_query.rb
 
 require 'date'
 require 'addressable/uri'
 require 'json'
 require 'rest-client'
+
 lat = 51.4770228
 lon = -0.0001147
 base_url = 'http://api.askgeo.com/v1'
@@ -23,10 +24,9 @@ if status == 'ok'
     astronomy.store(key, value)
   end
 end
-sunrise = astronomy.fetch('TodaySunriseIso8601')
-transit = astronomy.fetch('TodaySolarNoonIso8601')
-sunset = astronomy.fetch('TodaySunsetIso8601')
-puts sunrise
-puts transit
-puts sunset
+puts astronomy.fetch('TodaySunriseIso8601')
+puts astronomy.fetch('TodaySolarNoonIso8601')
+puts astronomy.fetch('TodaySunsetIso8601')
+puts astronomy
+
 

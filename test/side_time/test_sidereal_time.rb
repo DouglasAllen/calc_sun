@@ -33,6 +33,7 @@ class TestSideTime < Test::Unit::TestCase
   def setup
     @t = SideTime.new
     @t.date = @t.s_datetime('2017-01-11T00:10:10+00:00')
+    @lon = -90.0
   end
 
   def test_jd
@@ -49,10 +50,17 @@ class TestSideTime < Test::Unit::TestCase
     )
   end
 
-  def test_mean_sidereal_time
+  def test_gmst
     assert_equal(
-      7.549536649230867,
-      @t.mean_sidereal_time(@t.date)
+      7.549536649231,
+      @t.gmst(@t.date).round(12)
+    )
+  end
+
+  def test_lmst
+    assert_equal(
+      1.549536649231,
+      @t.lmst(@t.date, @lon).round(12)
     )
   end
 end

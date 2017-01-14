@@ -154,10 +154,17 @@ class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
     )
   end
 
-  def test_sidereal_time
+  def test_gmst0
     assert_equal(
       6.88757643322,
-      @t.sidereal_time(@t_date).round(12)
+      @t.gmst0(@t_date).round(12)
+    )
+  end
+
+  def test_gmst
+    assert_equal(
+      18.88757643322,
+      @t.gmst(@t_date).round(12)
     )
   end
 

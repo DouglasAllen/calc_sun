@@ -152,24 +152,6 @@ static VALUE func_longitude_of_perihelion(VALUE self, VALUE vdate){
   return DBL2NUM(vlop);
 }
 
-static VALUE func_true_longitude(VALUE self, VALUE vdate){
-  double vta =
-  NUM2DBL(func_true_anomaly(self, vdate));
-  double vlop =
-  NUM2DBL(func_longitude_of_perihelion(self, vdate));
-  double vtl =
-  fmod(vta + vlop, M2PI);
-  return DBL2NUM(vtl);
-}
-
-static VALUE func_sidetime(VALUE self, VALUE vdate){
-  double tl =
-  NUM2DBL(func_true_longitude(self, vdate));
-  double st =
-  fmod(PI + tl, M2PI) * R2D;
-  return DBL2NUM(st / 15.0);
-}
-
 static VALUE func_xv(VALUE self, VALUE vdate){
   double vea =
   NUM2DBL(func_eccentric_anomaly(self, vdate));
@@ -187,6 +169,41 @@ static VALUE func_yv(VALUE self, VALUE vdate){
   double vyv =
   sqrt(1.0 - ve * ve) * sin(vea);
   return DBL2NUM(vyv);
+}
+
+static VALUE func_true_anomaly1(VALUE self, VALUE vdate){
+  double xv = NUM2DBL(func_xv(self, vdate));
+  double yv = NUM2DBL(func_yv(self, vdate));
+  double vta = atan2(yv, xv);
+  return DBL2NUM(vta);
+}
+
+static VALUE func_true_longitude(VALUE self, VALUE vdate){
+  double vta =
+  NUM2DBL(func_true_anomaly(self, vdate));
+  double vlop =
+  NUM2DBL(func_longitude_of_perihelion(self, vdate));
+  double vtl =
+  fmod(vta + vlop, M2PI);
+  return DBL2NUM(vtl);
+}
+
+static VALUE func_gmst0(VALUE self, VALUE vdate){
+  double tl =
+  NUM2DBL(func_true_longitude(self, vdate));
+  double st =
+  fmod(PI + tl, M2PI) * R2D;
+  return DBL2NUM(st / 15.0);
+}
+
+static VALUE func_gmst(VALUE self, VALUE vdate){
+  double ajd = NUM2DBL(func_get_ajd(self, vdate));
+  double vt = fmod(ajd, 1) * 24.0;
+  double tl =
+  NUM2DBL(func_true_longitude(self, vdate));
+  double st =
+  fmod(PI + tl, M2PI) * R2D;
+  return DBL2NUM(st / 15.0 + vt);
 }
 
 static VALUE func_rv(VALUE self, VALUE vdate){
@@ -243,8 +260,8 @@ static VALUE func_declination(VALUE self, VALUE vdate){
 }
 
 static VALUE func_local_sidetime(VALUE self, VALUE vdate, VALUE vlon){
-  double vst = NUM2DBL(func_sidetime(self, vdate));
-  double vlst = NUM2DBL(vlon) / 15.0 + 12.0 + vst;
+  double vst = NUM2DBL(func_gmst(self, vdate));
+  double vlst = NUM2DBL(vlon) / 15.0 + vst;
   return DBL2NUM(fmod(vlst, 24.0));
 }
 
@@ -391,6 +408,8 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "eot_min", func_eot_min, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
   rb_define_method(cCalcSun, "equation_of_time", func_eot, 1);
+  rb_define_method(cCalcSun, "gmst0", func_gmst0, 1);
+  rb_define_method(cCalcSun, "gmst", func_gmst, 1);
   rb_define_method(cCalcSun, "jd", func_get_jd, 1);
   rb_define_method(cCalcSun, "jd2000_dif", func_jd_from_2000, 1);
   rb_define_method(cCalcSun, "jd2000_dif_lon", func_days_from_2000, 2);
@@ -406,12 +425,12 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun, "rise", func_rise, 3);
   rb_define_method(cCalcSun, "set", func_set, 3);
-  rb_define_method(cCalcSun, "sidereal_time", func_sidetime, 1);
   rb_define_method(cCalcSun, "t_mid_day", func_t_mid_day, 3);
   rb_define_method(cCalcSun, "t_rise", func_t_rise, 3);
   rb_define_method(cCalcSun, "t_set", func_t_set, 3);
   rb_define_method(cCalcSun, "t_south", func_t_south, 2);
   rb_define_method(cCalcSun, "true_anomaly", func_true_anomaly, 1);
+  rb_define_method(cCalcSun, "true_anomaly1", func_true_anomaly1, 1);
   rb_define_method(cCalcSun, "true_longitude", func_true_longitude, 1);
   rb_define_method(cCalcSun, "xv", func_xv, 1);
   rb_define_method(cCalcSun, "yv", func_yv, 1);

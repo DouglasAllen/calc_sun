@@ -7,8 +7,8 @@ require 'calc_sun'
 # require 'date' # for now we still need the Date class.
 
 date_str = Date.today.to_s
-lat = 51.4770228
-lon = -0.0001147
+lat = 51.4770228 # 051:28:37.28
+lon = -0.0001147 # -000:00:00.41
 
 cs = CalcSun.new
 cs.date = date_str

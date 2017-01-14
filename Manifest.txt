@@ -16,6 +16,7 @@ calc_sun.pdf
 dev.md
 example/adt_helper.rb
 example/askgeo_query.rb
+example/sun_pyephem.py
 example/sunriset.c
 example/sunriset.rb
 ext/calc_sun/calc_sun.c
@@ -30,4 +31,3 @@ lib/side_time/version.rb
 lib/sidereal_time.rb
 test/calc_sun/test_calc_sun.rb
 test/side_time/test_sidereal_time.rb
-

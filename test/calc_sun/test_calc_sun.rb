@@ -156,14 +156,14 @@ class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
 
   def test_sidereal_time
     assert_equal(
-      6.887400326513,
+      6.88757643322,
       @t.sidereal_time(@t_date).round(12)
     )
   end
 
   def test_local_sidereal_time
     assert_equal(
-      18.887400326513,
+      18.88757643322,
       @t.local_sidereal_time(@t_date, @t_lon).round(12)
     )
   end
@@ -184,28 +184,28 @@ class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
 
   def test_t_south
     assert_equal(
-      12.076770516638,
+      12.076594409931,
       @t.t_south(@t_date, @t_lon).round(12)
     )
   end
 
   def test_t_rise
     assert_equal(
-      6.016520851367,
+      6.01634474466,
       @t.t_rise(@t_date, @t_lon, @t_lat).round(12)
     )
   end
 
   def test_t_mid_day
     assert_equal(
-      12.076770516638,
+      12.076594409931,
       @t.t_mid_day(@t_date, @t_lat, @t_lon).round(12)
     )
   end
 
   def test_t_set
     assert_equal(
-      18.137020181909,
+      18.136844075202,
       @t.t_set(@t_date, @t_lon, @t_lat).round(12)
     )
   end

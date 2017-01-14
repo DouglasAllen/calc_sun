@@ -63,4 +63,18 @@ class TestSideTime < Test::Unit::TestCase
       @t.lmst(@t.date, @lon).round(12)
     )
   end
+
+  def test_gmst_angle
+    assert_equal(
+      113.243049738463,
+      (@t.gmst(@t.date) * 15.0).round(12)
+    )
+  end
+
+  def test_gmst_angle_180
+    assert_equal(
+      293.243049738463,
+      (@t.gmst(@t.date) * 15.0 + 180.0).round(12)
+    )
+  end
 end

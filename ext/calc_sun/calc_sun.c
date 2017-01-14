@@ -103,15 +103,6 @@ static VALUE func_equation_of_center(VALUE self, VALUE vdate){
   return DBL2NUM(veoc);
 }
 
-static VALUE func_true_anomaly(VALUE self, VALUE vdate){
-  double vma =
-  NUM2DBL(func_mean_anomaly(self, vdate));
-  double veoc =
-  NUM2DBL(func_equation_of_center(self, vdate));
-  double vta = vma + veoc;
-  return DBL2NUM(vta);
-}
-
 static VALUE func_mean_longitude(VALUE self, VALUE vdate){
   double jd = NUM2DBL(func_get_jd(self, vdate));
   double d = jd - DJ00;
@@ -141,6 +132,15 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vdate){
   return DBL2NUM(vooe);
 }
 
+static VALUE func_true_anomaly(VALUE self, VALUE vdate){
+  double vma =
+  NUM2DBL(func_mean_anomaly(self, vdate));
+  double veoc =
+  NUM2DBL(func_equation_of_center(self, vdate));
+  double vta = vma + veoc;
+  return DBL2NUM(vta);
+}
+
 static VALUE func_longitude_of_perihelion(VALUE self, VALUE vdate){
   double jd = NUM2DBL(func_get_jd(self, vdate));
   double d = jd - DJ00;
@@ -150,6 +150,24 @@ static VALUE func_longitude_of_perihelion(VALUE self, VALUE vdate){
      4.70935e-05 * d
     ) * D2R, M2PI);
   return DBL2NUM(vlop);
+}
+
+static VALUE func_true_longitude(VALUE self, VALUE vdate){
+  double vta =
+  NUM2DBL(func_true_anomaly(self, vdate));
+  double vlop =
+  NUM2DBL(func_longitude_of_perihelion(self, vdate));
+  double vtl =
+  fmod(vta + vlop, M2PI);
+  return DBL2NUM(vtl);
+}
+
+static VALUE func_sidetime(VALUE self, VALUE vdate){
+  double tl =
+  NUM2DBL(func_true_longitude(self, vdate));
+  double st =
+  fmod(PI + tl, M2PI) * R2D;
+  return DBL2NUM(st / 15.0);
 }
 
 static VALUE func_xv(VALUE self, VALUE vdate){
@@ -169,16 +187,6 @@ static VALUE func_yv(VALUE self, VALUE vdate){
   double vyv =
   sqrt(1.0 - ve * ve) * sin(vea);
   return DBL2NUM(vyv);
-}
-
-static VALUE func_true_longitude(VALUE self, VALUE vdate){
-  double vta =
-  NUM2DBL(func_true_anomaly(self, vdate));
-  double vlop =
-  NUM2DBL(func_longitude_of_perihelion(self, vdate));
-  double vtl =
-  fmod(vta + vlop, M2PI);
-  return DBL2NUM(vtl);
 }
 
 static VALUE func_rv(VALUE self, VALUE vdate){
@@ -232,16 +240,6 @@ static VALUE func_declination(VALUE self, VALUE vdate){
   double vz = vey * sin(vooe);
   double vdec = atan2(vz, ver);
   return DBL2NUM(vdec);
-}
-
-static VALUE func_sidetime(VALUE self, VALUE vdate){
-  double jd = NUM2DBL(func_get_jd(self, vdate));
-  double d = jd - DJ00;
-  double vst =
-  fmod(
-    (180 + 357.52911 + 282.9404) +
-    (0.985600281725 + 4.70935E-5) * d, 360.0);
-  return DBL2NUM(vst / 15.0);
 }
 
 static VALUE func_local_sidetime(VALUE self, VALUE vdate, VALUE vlon){

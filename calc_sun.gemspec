@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
                         set(date, lat, lon)'
   spec.homepage      = 'https://github.com/DouglasAllen/calc_sun'
   spec.license       = 'MIT'
+  require 'english'
   spec.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   require 'rake'
 

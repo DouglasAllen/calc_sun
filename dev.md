@@ -1,8 +1,6 @@
 
 # calc_sun
 
-
-
 ## develop
 
 ```code

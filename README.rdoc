@@ -30,7 +30,7 @@ An example is supplied to show this gem usage.
    or make a batchfile to start your envirnment with 'run devkitvars'
    cd to calc_sun dir
    $> gem build calc_sun.gemspec
-   $> gem install pkg/calc_sun-1.2.6.gem -l
+   $> gem install calc_sun-1.2.6.gem -l
 
 === DEVELOPERS:
 

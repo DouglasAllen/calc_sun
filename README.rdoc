@@ -58,34 +58,23 @@ and generate the RDoc.
 
 ==== enter Code
 
-        require 'date'
-        require 'calc_sun'
-        cs = CalcSun.new
+    lat = 39.742476
+    lon = -105.1786
 
+    require 'calc_sun'
+    cs = CalcSun.new
 
-        lat = 51.4770228
-        lon = -0.0001147
-        date_str = '2017-01-09'
-        day = cs.date(date_str)
+    # require 'date' included in CalcSun class
+    ajd = DateTime.new(2003, 10, 17, 12, 30, 30).ajd.to_f
+    puts cs.ajd2dt(ajd)
 
-        cs.rise(day, lat, lon)
-        cs.noon(day, lat, lon)
-        cs.set(day, lat, lon)
+    # set the date with set_date as date is just an ivar
+    day = cs.set_datetime('2003-10-17 12:30:30')
+    puts day
 
-        DateTime.jd(day.jd + cs.t_rise(day, lat, lon) / 24.0)
-        DateTime.jd(day.jd + cs.t_mid_day(day, lat, lon) / 24.0)
-        DateTime.jd(day.jd + cs.t_set(day, lat, lon) / 24.0)
-
-        # Equation of time is near zero on these dates. Check Noon.
-        day_array = ['2017-04-14', '2017-04-15', '2017-06-12', '2017-06-13', '2017-08-31', '2017-09-01', '2017-12-24', '2017-12-25']
-        require 'eot'
-        eot = Eot.new
-        (0..day_array.length - 1).each do |i|
-          day = cs.date(day_array[i])
-          p day.to_s
-          p eot.show_minutes(cs.eot_min(day))
-          cs.noon(day, lat, lon)
-        end
+    puts "Sun rise: #{cs.rise(day.ajd, lat, lon).httpdate}"
+    puts "Sun noon: #{cs.noon(day.ajd, lat, lon).httpdate}"
+    puts "Sun set: #{cs.set(day.ajd, lat, lon).httpdate}"
 
 === LICENSE:
 

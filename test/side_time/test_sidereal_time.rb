@@ -34,56 +34,65 @@ class TestSideTime < Test::Unit::TestCase
   def setup
     @v = CalcSun.new
     @t = SideTime.new
-    @t.date = @t.s_datetime('2017-01-11T00:10:10+00:00')
-    @lon = -90.0
+    @t_datetime = DateTime.jd(2_452_930.312847222 + 0.5)
+    @t_ajd = 2_452_930.312847222
+    @t_lat = 39.742476
+    @t_lon = -105.1786
   end
 
-  def test_jd
+  def test_date
     assert_equal(
-      2_457_765.0,
-      @t.jd(@t.date)
+      '2003-10-17T19:30:29+00:00',
+      @t.s_datetime(@t_datetime.to_s).to_s
     )
   end
 
   def test_ajd
     assert_equal(
-      2_457_764.507060185,
-      @t.ajd(@t.date)
+      2_452_930.312847222,
+      @t.ajd(@t_datetime).round(12)
+    )
+  end
+
+  def test_jd
+    assert_equal(
+      2_452_930.0,
+      @t.jd(@t_datetime)
     )
   end
 
   def test_gmst
     assert_equal(
-      7.549536649231,
-      @t.gmst(@t.date).round(12)
+      21.234371884854,
+      @t.gmst(@t_datetime).round(12)
     )
   end
 
   def test_lmst
     assert_equal(
-      1.549536649231,
-      @t.lmst(@t.date, @lon).round(12)
+      14.222465218187,
+      @t.lmst(@t_datetime, @t_lon).round(12)
     )
   end
 
   def test_gmst_angle
     assert_equal(
-      113.243049738463,
-      (@t.gmst(@t.date) * 15.0).round(12)
+      318.515578272811,
+      (@t.gmst(@t_datetime) * 15.0).round(12)
     )
   end
 
   def test_gmst_angle_180
     assert_equal(
-      293.243049738463,
-      (@t.gmst(@t.date) * 15.0 + 180.0).round(12)
+      138.515578272811,
+      ((@t.gmst(@t_datetime) * 15.0 + 180.0) % 360.0).round(12)
     )
   end
 
-  def test_comp_gmsts
-    assert_equal(
-      @v.gmst(@t.date).round(12),
-      @t.gmst(@t.date).round(12)
-    )
-  end
+#  def test_comp_gmsts
+#    assert_equal(
+#      @v.gmst(@t_datetime).round(12),
+#      @t.gmst(@t_datetime).round(12)
+#    )
+#  end
 end

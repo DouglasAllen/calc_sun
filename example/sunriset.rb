@@ -3,21 +3,20 @@
 lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-lat = 51.4770228 # 051:28:37.28
-lon = -0.0001147 # -000:00:00.41
+lat = 39.742476
+lon = -105.1786
 
 require 'calc_sun'
 cs = CalcSun.new
 
 # require 'date' included in CalcSun class
-date_time_utc = DateTime.now.to_time.utc
-cs.date = date_time_utc.to_s
-puts "UTC: #{cs.date}"
+ajd = DateTime.new(2003, 10, 17, 12, 30, 30).ajd.to_f
+puts cs.ajd2dt(ajd)
 
-# set the date with sdate as date is just an ivar
-day = cs.sdate(cs.date)
+# set the date with set_date as date is just an ivar
+day = cs.set_datetime('2003-10-17 12:30:30')
+puts day
 
-cs.rise(day, lat, lon)
-cs.noon(day, lat, lon)
-cs.set(day, lat, lon)
-
+puts "Sun rise: #{cs.rise(day.ajd, lat, lon).httpdate}"
+puts "Sun noon: #{cs.noon(day.ajd, lat, lon).httpdate}"
+puts "Sun set: #{cs.set(day.ajd, lat, lon).httpdate}"

@@ -9,11 +9,12 @@ lon = -105.1786
 require 'calc_sun'
 cs = CalcSun.new
 
-# require 'date' included in CalcSun class
+# require 'date' is included in CalcSun class
 ajd = DateTime.new(2003, 10, 17, 12, 30, 30).ajd.to_f
 puts cs.ajd2dt(ajd)
 
-# set the date with set_date as date is just an ivar
+# set the date/time with #set_datetime as date and time string.
+# this just creates a DateTime object and you could create your own.
 day = cs.set_datetime('2003-10-17 12:30:30')
 puts day
 

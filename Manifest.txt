@@ -8,7 +8,6 @@ Guardfile
 History.rdoc
 LICENSE.txt
 Manifest.txt
-README.rdoc
 Rakefile
 calc_sun.gemspec
 calc_sun.md
@@ -16,7 +15,6 @@ calc_sun.pdf
 dev.md
 example/adt_helper.rb
 example/askgeo_query.rb
-example/sun_pyephem.py
 example/sunriset.c
 example/sunriset.rb
 ext/calc_sun/calc_sun.c
@@ -24,9 +22,7 @@ ext/calc_sun/extconf.rb
 ext/side_time/extconf.rb
 ext/side_time/side_time.c
 lib/calc_sun.rb
-lib/calc_sun/calc_sun.so
 lib/calc_sun/version.rb
-lib/side_time/side_time.so
 lib/side_time/version.rb
 lib/sidereal_time.rb
 test/calc_sun/test_calc_sun.rb

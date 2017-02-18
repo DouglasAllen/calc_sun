@@ -1,9 +1,5 @@
 = calc_sun
 
-Inspired by the work done on http://www.stjarnhimlen.se/comp/ppcomp.html#5
-
-Hey not bad for a Windows machine aye? And I'm an old geek who didn't start programming until he was 50.
-
 {<img src="https://travis-ci.org/DouglasAllen/calc_sun.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/DouglasAllen/calc_sun]
 
 
@@ -18,7 +14,7 @@ Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 Calculate Sunrise, Noon, and Sunset using native C extension.
 An example is supplied to show this gem usage.
 
-=== INSTALL:
+=== INSTALL:  Note: older version
 
   $> gem install calc_sun
 
@@ -33,8 +29,7 @@ An example is supplied to show this gem usage.
    cd to devkit dir and run devkitvars.bat
    or make a batchfile to start your envirnment with 'run devkitvars'
    cd to calc_sun dir
-   $> rake -T
-   $> rake gem
+   $> gem build calc_sun.gemspec
    $> gem install pkg/calc_sun-1.2.6.gem -l
 
 === DEVELOPERS:

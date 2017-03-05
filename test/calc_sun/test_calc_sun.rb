@@ -57,7 +57,7 @@ class TestCalcSun100 < Test::Unit::TestCase # MiniTest::Test
 
   def test_mean_anomaly
     assert_equal(
-      4.937428768993,
+      4.937428967814,
       @t.mean_anomaly(@t_ajd).round(12)
     )
   end
@@ -71,14 +71,14 @@ class TestCalcSun100 < Test::Unit::TestCase # MiniTest::Test
 
   def test_equation_of_center
     assert_equal(
-      -0.032718977639,
+      -0.032718976284,
       @t.equation_of_center(@t_ajd).round(12)
     )
   end
 
   def test_true_anomaly
     assert_equal(
-      4.904709791354,
+      4.904709991531,
       @t.true_anomaly(@t_ajd).round(12)
     )
   end
@@ -127,7 +127,7 @@ class TestCalcSun100 < Test::Unit::TestCase # MiniTest::Test
 
   def test_true_longitude
     assert_equal(
-      3.560904690459,
+      3.560904890636,
       @t.true_longitude(@t_ajd).round(12)
     )
   end
@@ -152,47 +152,47 @@ class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
 
   def test_ecliptic_x
     assert_equal(
-      -0.92714449133,
+      -0.927144408603,
       @t.ecliptic_x(@t_ajd).round(12)
     )
   end
 
   def test_ecliptic_y
     assert_equal(
-      -0.413272467102,
+      -0.413272652694,
       @t.ecliptic_y(@t_ajd).round(12)
     )
   end
 
   def test_declination
     assert_equal(
-      -9.198883702716,
+      -9.198887763129,
       @t.declination(@t_ajd).round(12)
     )
   end
 
   def test_equation_of_time
     assert_equal(
-      3.656528112595,
+      3.656528697898,
       @t.equation_of_time(@t_ajd).round(12))
   end
 
   def test_eot_min
     assert_equal(
-      14.62611245038,
+      14.626114791593,
       @t.eot_min(@t_ajd).round(12))
   end
 
   def test_gmst0
     assert_equal(
-      1.601654000778,
+      1.601654765396,
       @t.gmst0(@t_ajd).round(12)
     )
   end
 
   def test_gmst
     assert_equal(
-      9.109987333614,
+      9.109988098232,
       @t.gmst(@t_ajd).round(12)
     )
   end
@@ -210,14 +210,14 @@ class TestCalcSun300 < Test::Unit::TestCase # MiniTest::Test
 
   def test_daylight_time
     assert_equal(
-      11.114993419492,
+      11.114992936688,
       @t.daylight_time(@t_ajd, @t_lat).round(12)
     )
   end
 
   def test_diurnal_arc
     assert_equal(
-      5.557496709746,
+      5.557496468344,
       @t.diurnal_arc(@t_ajd, @t_lat).round(12)
     )
   end
@@ -231,35 +231,35 @@ class TestCalcSun300 < Test::Unit::TestCase # MiniTest::Test
 
   def test_right_ascension
     assert_equal(
-      13.482862748518,
+      13.482863468938,
       @t.right_ascension(@t_ajd).round(12)
     )
   end
 
   def test_t_south
     assert_equal(
-      18.769795184389,
+      18.769795904184,
       @t.t_south(@t_ajd, @t_lon).round(12)
     )
   end
 
   def test_t_rise
     assert_equal(
-      13.212298474643,
+      13.21229943584,
       @t.t_rise(@t_ajd, @t_lat,  @t_lon).round(12)
     )
   end
 
   def test_t_mid_day
     assert_equal(
-      18.769795184389,
+      18.769795904184,
       @t.t_mid_day(@t_ajd, @t_lat, @t_lon).round(12)
     )
   end
 
   def test_t_set
     assert_equal(
-      0.327291894135,
+      0.327292372527,
       @t.t_set(@t_ajd, @t_lat, @t_lon).round(12)
     )
   end

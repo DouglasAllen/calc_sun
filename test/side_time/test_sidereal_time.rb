@@ -34,8 +34,8 @@ class TestSideTime < Test::Unit::TestCase
   def setup
     @v = CalcSun.new
     @t = SideTime.new
-    @t_datetime = DateTime.jd(2_452_930.312847222 + 0.5)
     @t_ajd = 2_452_930.312847222
+    @t_datetime = DateTime.jd(@t_ajd + 0.5)
     @t_lat = 39.742476
     @t_lon = -105.1786
   end
@@ -89,10 +89,19 @@ class TestSideTime < Test::Unit::TestCase
     )
   end
 
-#  def test_comp_gmsts
-#    assert_equal(
-#      @v.gmst(@t_datetime).round(12),
-#      @t.gmst(@t_datetime).round(12)
-#    )
-#  end
+  def test_comp_gmsts1
+    assert_equal(
+      21.234371884854,
+      @t.gmst(@t_datetime).round(12)
+    )
+  end
+
+
+
+  def test_comp_gmsts1
+    assert_equal(
+      21.14307169892,
+      @v.gmst(@t_ajd + 0.5).round(12)
+    )
+  end
 end

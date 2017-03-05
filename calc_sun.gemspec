@@ -17,7 +17,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/DouglasAllen/calc_sun'
   spec.license       = 'MIT'
   require 'English'
-  spec.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  spec.files = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
+  end
   require 'rake'
   spec.extensions << 'ext/calc_sun/extconf.rb'
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})

@@ -39,9 +39,9 @@ static VALUE func_set_datetime(VALUE self, VALUE vdatetime){
 }
 /*
  * call-seq:
- *  date('yyyy-mm-dd')
+ *  ajd2dt(ajd)
  *
- * convert input string to DateTime object.
+ * convert input float to DateTime object.
  *
  */
 static VALUE func_ajd_2_datetime(VALUE self, VALUE vajd){
@@ -84,12 +84,15 @@ static VALUE func_get_jd(VALUE self, VALUE vdatetime){
  */
 static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
-  double d = ajd - DJ00;
+  double t = (ajd - DJ00) / 36525;
   double vma =
-  fmod(
-    (357.5291  +
-     0.98560028 * d
-    ) * D2R, M2PI);
+  fmod((            357.52910918     +
+    t * (         35999.05029113889  +
+    t * (     1.0/-6507.592190889371 +
+    t * (  1.0/26470588.235294115    +
+    t * (1.0/-313315926.8929504)
+        )))
+      ) * D2R, M2PI);
   return DBL2NUM(vma);
 }
 
@@ -449,7 +452,6 @@ void Init_calc_sun(void){
   rb_define_attr(cCalcSun, "date", 1, 1);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "ajd2dt", func_ajd_2_datetime, 1);
-
   rb_define_method(cCalcSun, "set_datetime", func_set_datetime, 1);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);
   rb_define_method(cCalcSun, "declination", func_declination, 1);

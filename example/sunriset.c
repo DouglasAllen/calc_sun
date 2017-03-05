@@ -142,9 +142,83 @@ double rev180( double x );
 double GMST0( double d );
 
 /* midnight 1.1.1970 = JD 2440587.5 */
-#define EJD (double) 2440588.0
+#define EJD (double) 2440587.0
 /* midnight 1.1.2000 = JD 2451544.5 */
 #define J2000 (double) 2451545.0
+
+/*  Compute the Julian Day for the given date */
+/*  Julian Date is the number of days since noon of Jan 1 4713 B.C. */
+
+double CalcJD(int ny, int nm, int nd, double ut)
+{
+  double A, B, C, D, jd, day;
+
+  day = nd + ut / 24.0;
+  if ((nm == 1) || (nm == 2)) {
+    ny = ny - 1;
+    nm = nm + 12;
+  }
+
+  if (((double) ny + nm / 12.0 + day / 365.25) >=
+    (1582.0 + 10.0 / 12.0 + 15.0 / 365.25))
+  {
+    A = ((int) (ny / 100.0));
+    B = 2.0 - A + (int) (A / 4.0);
+  }
+  else
+  {
+    B = 0.0;
+  }
+
+  if (ny < 0.0)
+  {
+    C = (int) ((365.25 * (double) ny) - 0.75);
+  }
+    else
+  {
+    C = (int) (365.25 * (double) ny);
+  }
+
+  D = (int) (30.6001 * (double) (nm + 1));
+  jd = B + C + D + day + 1720994.5;
+  return (jd);
+}
+
+
+/* Calculate the Julian date from the system clock */
+
+double JDNow(void)
+{
+  int year,month,day;
+  int hours,minutes,seconds;
+  double ut,jd;
+  time_t observatory;
+  struct tm * greenwich;
+
+  time(&observatory);
+  greenwich=gmtime(&observatory);
+
+  year = greenwich->tm_year;
+  year = year + 1900;
+  month = greenwich->tm_mon;
+  month = month + 1;
+  day = greenwich->tm_mday;
+  hours = greenwich->tm_hour;
+  minutes = greenwich->tm_min;
+  seconds = greenwich->tm_sec;
+
+  ut = ( (double) seconds )/3600. +
+    ( (double) minutes )/60. +
+    ( (double) hours );
+
+  jd = CalcJD(year, month, day, ut);
+
+  /* To test for specific jd change this value and uncomment */
+
+  /* jd = 2462088.69;  */
+
+  return (jd) ;
+}
 
 /* A small test program */
 
@@ -171,6 +245,8 @@ void main(void)
   double fd;
   // iauJd2cal(jd + J2000, 0, &iy, &im, &id, &fd);
   printf("\n");
+  printf("\tjd now \t\t\t : %7.9f\n", JDNow());
+
   majd = days_since_2000_Jan_0(year,month,day);
   /* printf( "MAJD %6.6f \n", majd );
   printf( "AJD %6.6f \n", majd + 2451545.0 );
@@ -178,10 +254,10 @@ void main(void)
   // printf ("\tDate \t\t\t : %4d/%2.2d/%2.2d\n", iy, im, id );
   // printf ("\tFD \t\t\t : %f\n", fd );
   printf("\tEpoch \t\t\t : %llu seconds past midnight 1.1.1970\n",  time(0));
-  printf ("\tDays \t\t\t : %d days past midnight 1.1.1970\n", epoc_days);
-   printf("\tJD \t\t\t : %f \n", jd_today);
-  printf ("\tDays \t\t\t : %f Number of days since 12:00 UTC Jan 1st 2000\n", jd_days);
-  printf ("\tDays \t\t\t : %f My Number of days since 12:00 UTC Jan 1st 2000\n", jd);
+  printf("\tDays \t\t\t : %d days past midnight 1.1.1970\n", epoc_days);
+  printf("\tJD \t\t\t : %f \n", jd_today);
+  printf("\tDays \t\t\t : %f Number of days since 12:00 UTC Jan 1st 2000\n", jd_days);
+  printf("\tDays \t\t\t : %f My Number of days since 12:00 UTC Jan 1st 2000\n", jd);
   // "is %ld \n", seconds / 86400);
 
   // printf( "Longitude (+ is east) and latitude (+ is north) : " );
@@ -204,7 +280,7 @@ void main(void)
   nautlen = day_nautical_twilight_length(jd, lon, lat);
   astrlen = day_astronomical_twilight_length(jd, lon, lat);
 
-  printf( "\tDay length \t\t :%5.2f hours\n", daylen );
+  printf( "\tDay length \t\t : %5.2f hours\n", daylen );
   // printf( "With civil twilight         %5.2f hours\n", civlen );
   // printf( "With nautical twilight      %5.2f hours\n", nautlen );
   // printf( "With astronomical twilight  %5.2f hours\n", astrlen );
@@ -251,8 +327,8 @@ void main(void)
   switch( civ )
   {
     case 0:
-      printf( "\tCivil twilight \t\t : starts %5.2fh UTC\n"
-              "\t\t\t\t : ends %5.2fh UTC\n", civ_start, civ_end );
+      printf( "\tCivil twilight \t\t : starts %2.0f:%02.0f UTC\n"
+              "\t\t\t\t : ends   %2.0f:%02.0f UTC\n", civ_start, civ_end );
       break;
     case +1:
       printf( "Never darker than civil twilight\n" );
@@ -265,8 +341,8 @@ void main(void)
   switch( naut )
   {
     case 0:
-      printf( "\tNautical twilight \t : starts %5.2fh UTC\n"
-              "\t\t\t\t : ends %5.2fh UTC\n", naut_start, naut_end );
+      printf( "\tNautical twilight \t : starts %2.0f:%02.0f UTC\n"
+              "\t\t\t\t : ends   %2.0f:%02.0f UTC\n", naut_start, naut_end );
       break;
     case +1:
       printf( "Never darker than nautical twilight\n" );
@@ -279,8 +355,8 @@ void main(void)
   switch( astr )
   {
     case 0:
-      printf( "\tAstronomical twilight \t : starts %5.2fh UTC\n"
-              "\t\t\t\t : ends %5.2fh UTC\n", astr_start, astr_end );
+      printf( "\tAstronomical twilight \t : starts %2.0f:%02.0f UTC\n"
+              "\t\t\t\t : ends   %2.0f:%02.0f UTC\n", astr_start, astr_end );
       break;
     case +1:
       printf( "Never darker than astronomical twilight\n" );

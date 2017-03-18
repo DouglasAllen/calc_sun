@@ -89,18 +89,16 @@ class TestSideTime < Test::Unit::TestCase
     )
   end
 
-  def test_comp_gmsts1
+  def test1_comp_gmsts1
     assert_equal(
       21.234371884854,
       @t.gmst(@t_datetime).round(12)
     )
   end
 
-
-
-  def test_comp_gmsts1
+  def test2_comp_gmsts1
     assert_equal(
-      21.14307169892,
+      21.143071227904,
       @v.gmst(@t_ajd + 0.5).round(12)
     )
   end

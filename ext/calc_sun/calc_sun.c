@@ -14,6 +14,7 @@
 # define INV24 1.0 / 24.0
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0L
+# define RND12 1000000000000.0
 
 /*
  * call-seq:
@@ -86,14 +87,12 @@ static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
   double t = (ajd - DJ00) / 36525;
   double vma =
-  fmod((            357.52910918     +
-    t * (         35999.05029113889  +
-    t * (     1.0/-6507.592190889371 +
-    t * (  1.0/26470588.235294115    +
-    t * (1.0/-313315926.8929504)
-        )))
-      ) * D2R, M2PI);
-  return DBL2NUM(vma);
+  fmod((              357.52910918     +
+    t * (           35999.05029113889  +
+    t * (     1.0 / -6507.592190889371 +
+    t * (  1.0 / 26470588.235294115    +
+    t * (1.0 / -313315926.8929504))))) * D2R, M2PI);
+  return DBL2NUM(roundf(vma * RND12) / RND12);
 }
 
 static VALUE func_eccentricity(VALUE self, VALUE vajd){
@@ -102,7 +101,7 @@ static VALUE func_eccentricity(VALUE self, VALUE vajd){
   double ve =
   0.016709 -
   1.151e-9 * d;
-  return DBL2NUM(ve);
+  return DBL2NUM(roundf(ve * RND12) / RND12);
 }
 
 static VALUE func_equation_of_center(VALUE self, VALUE vajd){
@@ -118,7 +117,7 @@ static VALUE func_equation_of_center(VALUE self, VALUE vajd){
   ve2 * sin(vma) +
   vesqr54 * sin(2 * vma) +
   vecube12 * (13.0 * sin(3 * vma) - 3.0 * sin(vma));
-  return DBL2NUM(veoc);
+  return DBL2NUM(roundf(veoc * RND12) / RND12);
 }
 
 static VALUE func_mean_longitude(VALUE self, VALUE vajd){
@@ -129,7 +128,7 @@ static VALUE func_mean_longitude(VALUE self, VALUE vajd){
     (280.4664567 +
      0.9856473601037645 * d
     ) * D2R, M2PI);
-  return DBL2NUM(vml);
+  return DBL2NUM(roundf(vml * RND12) / RND12);
 }
 
 static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
@@ -139,7 +138,7 @@ static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
   NUM2DBL(func_mean_longitude(self, vajd));
   double vea =
   vml + ve * sin(vml) * (1.0 + ve * cos(vml));
-  return DBL2NUM(vea);
+  return DBL2NUM(roundf(vea * RND12) / RND12);
 }
 
 static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
@@ -147,7 +146,7 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
   double d = jd - DJ00;
   double vooe =
   (23.439291 - 3.563E-7 * d) * D2R;
-  return DBL2NUM(vooe);
+  return DBL2NUM(roundf(vooe * RND12) / RND12);
 }
 
 static VALUE func_true_anomaly(VALUE self, VALUE vajd){
@@ -156,7 +155,7 @@ static VALUE func_true_anomaly(VALUE self, VALUE vajd){
   double veoc =
   NUM2DBL(func_equation_of_center(self, vajd));
   double vta = vma + veoc;
-  return DBL2NUM(vta);
+  return DBL2NUM(roundf(vta * RND12) / RND12);
 }
 
 static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
@@ -167,7 +166,7 @@ static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
     (282.9404 +
      4.70935e-05 * d
     ) * D2R, M2PI);
-  return DBL2NUM(vlop);
+  return DBL2NUM(roundf(vlop * RND12) / RND12);
 }
 
 static VALUE func_xv(VALUE self, VALUE vajd){
@@ -176,7 +175,7 @@ static VALUE func_xv(VALUE self, VALUE vajd){
   double ve =
   NUM2DBL(func_eccentricity(self, vajd));
   double vxv = cos(vea) - ve;
-  return DBL2NUM(vxv);
+  return DBL2NUM(roundf(vxv * RND12) / RND12);
 }
 
 static VALUE func_yv(VALUE self, VALUE vajd){
@@ -186,14 +185,14 @@ static VALUE func_yv(VALUE self, VALUE vajd){
   NUM2DBL(func_eccentricity(self, vajd));
   double vyv =
   sqrt(1.0 - ve * ve) * sin(vea);
-  return DBL2NUM(vyv);
+  return DBL2NUM(roundf(vyv * RND12) / RND12);
 }
 
 static VALUE func_true_anomaly1(VALUE self, VALUE vajd){
   double xv = NUM2DBL(func_xv(self, vajd));
   double yv = NUM2DBL(func_yv(self, vajd));
   double vta = atan2(yv, xv);
-  return DBL2NUM(vta);
+  return DBL2NUM(roundf(vta * RND12) / RND12);
 }
 
 static VALUE func_true_longitude(VALUE self, VALUE vajd){
@@ -203,7 +202,7 @@ static VALUE func_true_longitude(VALUE self, VALUE vajd){
   NUM2DBL(func_longitude_of_perihelion(self, vajd));
   double vtl =
   fmod(vta + vlop, M2PI);
-  return DBL2NUM(vtl);
+  return DBL2NUM(roundf(vtl * RND12) / RND12);
 }
 
 static VALUE func_gmst0(VALUE self, VALUE vajd){
@@ -211,7 +210,7 @@ static VALUE func_gmst0(VALUE self, VALUE vajd){
   NUM2DBL(func_true_longitude(self, vajd));
   double st =
   fmod(PI + tl, M2PI) * R2D;
-  return DBL2NUM(st / 15.0);
+  return DBL2NUM(roundf((st / 15.0) * RND12) / RND12);
 }
 
 static VALUE func_gmst(VALUE self, VALUE vajd){
@@ -221,7 +220,7 @@ static VALUE func_gmst(VALUE self, VALUE vajd){
   NUM2DBL(func_true_longitude(self, vajd));
   double st =
   fmod(PI + tl, M2PI) * R2D;
-  return DBL2NUM(st / 15.0 + vt);
+  return DBL2NUM(roundf((st / 15.0 + vt) * RND12) / RND12);
 }
 
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
@@ -237,7 +236,7 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
   (t * t * t / 38710000.0);
   sidereal = fmod(sidereal, 360.0);
   /* change to hours */
-  return DBL2NUM(fmod(sidereal / 15.0, 24.0));
+  return DBL2NUM(fmod(roundf((sidereal / 15.0) * RND12) / RND12, 24.0));
 }
 
 static VALUE func_rv(VALUE self, VALUE vajd){
@@ -247,7 +246,7 @@ static VALUE func_rv(VALUE self, VALUE vajd){
   NUM2DBL(func_yv(self, vajd));
   double vrv =
   sqrt(vxv * vxv + vyv * vyv);
-  return DBL2NUM(vrv);
+  return DBL2NUM(roundf(vrv * RND12) / RND12);
 }
 
 static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
@@ -256,7 +255,7 @@ static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
   double vtl =
   NUM2DBL(func_true_longitude(self, vajd));
   double vex = vrv * cos(vtl);
-  return DBL2NUM(vex);
+  return DBL2NUM(roundf(vex * RND12) / RND12);
 }
 
 static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
@@ -265,7 +264,7 @@ static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
   double vtl =
   NUM2DBL(func_true_longitude(self, vajd));
   double vey = vrv * sin(vtl);
-  return DBL2NUM(vey);
+  return DBL2NUM(roundf(vey * RND12) / RND12);
 }
 
 static VALUE func_right_ascension(VALUE self, VALUE vajd){
@@ -277,7 +276,7 @@ static VALUE func_right_ascension(VALUE self, VALUE vajd){
   NUM2DBL(func_ecliptic_x(self, vajd));
   double vra =
   fmod(atan2(vey * cos(vooe), vex) + M2PI, M2PI);
-  return DBL2NUM(fmod((vra * R2D / 15.0), 24.0));
+  return DBL2NUM(fmod(roundf((vra * R2D / 15.0) * RND12) / RND12, 24.0));
 }
 
 static VALUE func_declination(VALUE self, VALUE vajd){
@@ -290,13 +289,13 @@ static VALUE func_declination(VALUE self, VALUE vajd){
   double ver = sqrt(vex * vex + vey * vey);
   double vz = vey * sin(vooe);
   double vdec = atan2(vz, ver);
-  return DBL2NUM(vdec * R2D);
+  return DBL2NUM(roundf((vdec * R2D) * RND12) / RND12);
 }
 
 static VALUE func_local_sidetime(VALUE self, VALUE vajd, VALUE vlon){
   double vst = NUM2DBL(func_mean_sidetime(self, vajd));
   double vlst = vst + NUM2DBL(vlon) / 15.0 ;
-  return DBL2NUM(fmod(vlst, 24.0));
+  return DBL2NUM(fmod(roundf(vlst * RND12) / RND12, 24.0));
 }
 
 static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
@@ -319,14 +318,14 @@ static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
     (vcos_dec * vcos_lat));
   double vdla = vdl * R2D;
   double vdlt = vdla / 15.0 * 2.0;
-  return DBL2NUM(vdlt);
+  return DBL2NUM(roundf(vdlt * RND12) / RND12);
 }
 
 static VALUE func_diurnal_arc(VALUE self, VALUE vajd, VALUE vlat){
   double jd = floor(NUM2DBL(vajd));
   double dlt = NUM2DBL(func_dlt(self, DBL2NUM(jd), vlat));
   double da = dlt / 2.0;
-  return DBL2NUM(da);
+  return DBL2NUM(roundf(da * RND12) / RND12);
 }
 
 static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
@@ -336,26 +335,31 @@ static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
   double vx = lst - ra;
   double vt = vx - 24.0 * floor(vx * INV24 + 0.5);
   //printf("%f", jd);
-  return DBL2NUM(fmod(12.0 - vt, 24.0));
+  return DBL2NUM(fmod(roundf((12.0 - vt) * RND12) / RND12, 24.0));
   //return DBL2NUM(fmod(-vx, 24.0));
   //return DBL2NUM(lst - ra);
 }
 
+static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlon){
+  return Qnil;
+}
+
+
 static VALUE func_t_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
-  return DBL2NUM(fmod((ts - da), 24.0));
+  return DBL2NUM(fmod(roundf((ts - da) * RND12) / RND12, 24.0));
 }
 
 static VALUE func_t_mid_day(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
-  return DBL2NUM(fmod(ts, 24.0));
+  return DBL2NUM(fmod(roundf(ts * RND12) / RND12, 24.0));
 }
 
 static VALUE func_t_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
-  return DBL2NUM(fmod((ts + da), 24.0));
+  return DBL2NUM(fmod(roundf((ts + da) * RND12) / RND12, 24.0));
 }
 
 static VALUE func_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -379,13 +383,16 @@ static VALUE func_noon(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
 }
 
 static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  VALUE vst;
+  double stajd;
   double st = NUM2DBL(func_t_set(self, vajd, vlat, vlon));
   double nt = NUM2DBL(func_t_mid_day(self, vajd, vlat, vlon));
   double ajd = NUM2DBL(vajd);
-  if (st < nt)
+  if (st < nt){
     st += 24.0;
-  double stajd = floor(ajd) - 0.5 + st / 24.0;
-  VALUE vst = DBL2NUM(stajd);
+  }
+  stajd = floor(ajd) - 0.5 + st / 24.0;
+  vst = DBL2NUM(stajd);
   //VALUE date = rb_sprintf("Sun set: %2.0f:%02.0f UTC\n",
   //floor(st), floor(fmod(st, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vst);
@@ -405,14 +412,14 @@ static VALUE func_jd_from_2000(VALUE self, VALUE vajd){
   int month = NUM2INT(rb_funcall(vajd, rb_intern("month"), 0));
   int day = NUM2INT(rb_funcall(vajd, rb_intern("day"), 0));
   double days = GetDaysTillJ2000(year, month, day, 12);
-  return DBL2NUM(days);
+  return DBL2NUM(roundf(days * RND12) / RND12);
 }
 
 static VALUE func_days_from_2000(VALUE self, VALUE vajd, VALUE vlon){
   double jd = NUM2DBL(vajd);
   double lon = NUM2DBL(vlon);
   double days = jd - DJ00 - lon / 360;
-  return DBL2NUM(days);
+  return DBL2NUM(roundf(days * RND12) / RND12);
 }
 
 static VALUE func_eot(VALUE self, VALUE vajd){
@@ -424,12 +431,12 @@ static VALUE func_eot(VALUE self, VALUE vajd){
   NUM2DBL(func_true_longitude(self, vajd));
   double ra = 15.0 * D2R *
   NUM2DBL(func_right_ascension(self, vajd));
-  return DBL2NUM(fmod((ma - ta + tl - ra), M2PI) * 180 / PI);
+  return DBL2NUM(roundf(fmod((ma - ta + tl - ra), M2PI) * R2D * RND12) / RND12 );
 }
 
 static VALUE func_eot_min(VALUE self, VALUE vajd){
   double eot = NUM2DBL(func_eot(self, vajd));
-  return DBL2NUM(eot / 15 * 60);
+  return DBL2NUM(roundf((eot / 15 * 60) * RND12) / RND12);
 }
 
 static VALUE func_min_to_s(VALUE self, VALUE vmin){
@@ -452,7 +459,7 @@ void Init_calc_sun(void){
   rb_define_attr(cCalcSun, "date", 1, 1);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "ajd2dt", func_ajd_2_datetime, 1);
-  rb_define_method(cCalcSun, "set_datetime", func_set_datetime, 1);
+  rb_define_method(cCalcSun, "altitude", func_altitude, 2);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);
   rb_define_method(cCalcSun, "declination", func_declination, 1);
   rb_define_method(cCalcSun, "diurnal_arc", func_diurnal_arc, 2);
@@ -480,6 +487,7 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun, "rise", func_rise, 3);
   rb_define_method(cCalcSun, "set", func_set, 3);
+  rb_define_method(cCalcSun, "set_datetime", func_set_datetime, 1);
   rb_define_method(cCalcSun, "t_mid_day", func_t_mid_day, 3);
   rb_define_method(cCalcSun, "t_rise", func_t_rise, 3);
   rb_define_method(cCalcSun, "t_set", func_t_set, 3);

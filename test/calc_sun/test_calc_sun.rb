@@ -274,7 +274,7 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
 
   def test_t_set
     assert_equal(
-      0.327292452864,
+      0.327291928576,
       @t.t_set(@t_ajd, @t_lat, @t_lon)
     )
   end

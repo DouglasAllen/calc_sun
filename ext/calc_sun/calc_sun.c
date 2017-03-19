@@ -359,7 +359,7 @@ static VALUE func_t_mid_day(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
 static VALUE func_t_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
-  return DBL2NUM(fmod(roundf((ts + da) * RND12) / RND12, 24.0));
+  return DBL2NUM(roundf(fmod((ts + da), 24.0) * RND12) / RND12);
 }
 
 static VALUE func_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){

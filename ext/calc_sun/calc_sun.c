@@ -215,12 +215,14 @@ static VALUE func_gmst0(VALUE self, VALUE vajd){
 
 static VALUE func_gmst(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
-  double vt = fmod(ajd, 1) * 24.0;
+  double vt = fmod(ajd, 1.0) * 24.0;
   double tl =
   NUM2DBL(func_true_longitude(self, vajd));
   double st =
-  fmod(PI + tl, M2PI) * R2D;
-  return DBL2NUM(roundf((st / 15.0 + vt) * RND12) / RND12);
+  fmod((PI + tl) * R2D, 360.0) / 15.0;
+  double mst = fmod((st + vt), 24.0);
+  // roundf(fmod(st + vt, 24) * RND12) / RND12
+  return DBL2NUM(roundf(mst * RND12) / RND12);
 }
 
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){

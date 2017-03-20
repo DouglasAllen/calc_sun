@@ -14,6 +14,7 @@
 # define INV24 1.0 / 24.0
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0L
+# define RND12 1000000000000.0
 
 /*
  * call-seq:
@@ -80,7 +81,7 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vdate){
   sidereal = fmod(sidereal, 360.0);
   /* change to hours */
   sidereal *= 24.0 / 360.0;
-  return DBL2NUM(sidereal);
+  return DBL2NUM(roundf(sidereal * RND12) / RND12);
 }
 /*
  * call-seq:
@@ -97,7 +98,7 @@ static VALUE func_local_sidetime(VALUE self, VALUE vdate, VALUE vlon){
   sidereal *= 15.0;
   ls = sidereal + lon;
   ls *= 24.0 / 360.0;
-  return DBL2NUM(ls);
+  return DBL2NUM(roundf(ls * RND12) / RND12);
 }
 
 

@@ -50,7 +50,7 @@ class TestSideTime < Test::Unit::TestCase
   def test_ajd
     assert_equal(
       2_452_930.312847222,
-      @t.ajd(@t_datetime).round(12)
+      @t.ajd(@t_datetime)
     )
   end
 
@@ -63,43 +63,43 @@ class TestSideTime < Test::Unit::TestCase
 
   def test_gmst
     assert_equal(
-      21.234371884854,
-      @t.gmst(@t_datetime).round(12)
+      21.234372837376,
+      @t.gmst(@t_datetime)
     )
   end
 
   def test_lmst
     assert_equal(
-      14.222465218187,
-      @t.lmst(@t_datetime, @t_lon).round(12)
+      14.222466482176,
+      @t.lmst(@t_datetime, @t_lon)
     )
   end
 
   def test_gmst_angle
     assert_equal(
-      318.515578272811,
-      (@t.gmst(@t_datetime) * 15.0).round(12)
+      318.51559256064,
+      (@t.gmst(@t_datetime) * 15.0)
     )
   end
 
   def test_gmst_angle_180
     assert_equal(
-      138.515578272811,
-      ((@t.gmst(@t_datetime) * 15.0 + 180.0) % 360.0).round(12)
+      138.51559256064002,
+      ((@t.gmst(@t_datetime) * 15.0 + 180.0) % 360.0)
     )
   end
 
   def test1_comp_gmsts1
     assert_equal(
-      21.234371884854,
-      @t.gmst(@t_datetime).round(12)
+      21.234372837376,
+      @t.gmst(@t_datetime)
     )
   end
 
   def test2_comp_gmsts1
     assert_equal(
       21.143071227904,
-      @v.gmst(@t_ajd + 0.5).round(12)
+      @v.gmst(@t_ajd + 0.5)
     )
   end
 end

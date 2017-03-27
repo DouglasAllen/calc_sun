@@ -205,6 +205,26 @@ static VALUE func_true_longitude(VALUE self, VALUE vajd){
   return DBL2NUM(roundf(vtl * RND12) / RND12);
 }
 
+static VALUE func_gmsa0(VALUE self, VALUE vajd){
+  double tl =
+  NUM2DBL(func_true_longitude(self, vajd));
+  double st =
+  fmod(PI + tl, M2PI) * R2D;
+  return DBL2NUM(roundf(st * RND12) / RND12);
+}
+
+static VALUE func_gmsa(VALUE self, VALUE vajd){
+  double ajd = NUM2DBL(vajd);
+  double vt = fmod(ajd, 1.0) * 24.0 * 15.0;
+  double tl =
+  NUM2DBL(func_true_longitude(self, vajd));
+  double st =
+  fmod((PI + tl) * R2D, 360.0);
+  double mst = fmod((st + vt), 360.0);
+  // roundf(fmod(st + vt, 24) * RND12) / RND12
+  return DBL2NUM(roundf(mst * RND12) / RND12);
+}
+
 static VALUE func_gmst0(VALUE self, VALUE vajd){
   double tl =
   NUM2DBL(func_true_longitude(self, vajd));
@@ -472,6 +492,8 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "eot_min", func_eot_min, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
   rb_define_method(cCalcSun, "equation_of_time", func_eot, 1);
+  rb_define_method(cCalcSun, "gmsa0", func_gmsa0, 1);
+  rb_define_method(cCalcSun, "gmsa", func_gmsa, 1);
   rb_define_method(cCalcSun, "gmst0", func_gmst0, 1);
   rb_define_method(cCalcSun, "gmst", func_gmst, 1);
   rb_define_method(cCalcSun, "jd", func_get_jd, 1);

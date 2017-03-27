@@ -64,10 +64,10 @@ class TestMyTime < Test::Unit::TestCase # MiniTest::Test
     )
   end
 
-  def test_gmst
+  def test_gmsa
     assert_equal(
       9.109988442112,
-      @t.gmst(@jd)
+      @t.gmsa(@jd)
     )
   end
 end

@@ -19,12 +19,21 @@ require 'date'
 class TestDateTime < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
-    @t_ajd = 2_452_930.312847222
+    @tz = -7
+    @time = Time.new(2003, 10, 17, 12, 30, 30, '-07:00').getgm.to_datetime
+    @t_ajd = @time.ajd # 2_452_930.312847222
     @t_date = '2003-10-17'
     @t_datetime = DateTime.jd(@t_ajd + 0.5)
     @t_jd = Date.parse('2003-10-17').jd.to_f
     @t_lat = 39.742476
     @t_lon = -105.1786
+  end
+
+  def test_ajd
+    assert_equal(
+      2_452_930.312847222,
+      @t.ajd(@t_datetime)
+    )
   end
 
   def test_set_datetime
@@ -41,17 +50,17 @@ class TestDateTime < Test::Unit::TestCase # MiniTest::Test
     )
   end
 
-  def test_ajd
-    assert_equal(
-      2_452_930.312847222,
-      @t.ajd(@t_datetime).round(12)
-    )
-  end
-
   def test_jd
     assert_equal(
       2_452_930.0,
-      @t.jd(@t_datetime).round(12)
+      @t.jd(@t_datetime)
+    )
+  end
+
+  def test_mean_sidereal_time
+    assert_equal(
+      21.234372837376,
+      @t.mean_sidereal_time(@t_ajd)
     )
   end
 end
@@ -60,7 +69,8 @@ end
 class TestAnles < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
-    @t_ajd = 2_452_930.312847222
+    @time = Time.new(2003, 10, 17, 12, 30, 30, '-07:00').getgm.to_datetime
+    @t_ajd = @time.ajd # 2_452_930.312847222
     @t_date = '2003-10-17'
     @t_datetime = DateTime.jd(@t_ajd + 0.5)
     @t_jd = Date.parse('2003-10-17').jd.to_f
@@ -157,8 +167,9 @@ end
 class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
+    @time = Time.new(2003, 10, 17, 12, 30, 30, '-07:00').getgm.to_datetime
+    @t_ajd = @time.ajd # 2_452_930.312847222
     @t_jd = Date.parse('2003-10-17').jd.to_f
-    @t_ajd = 2_452_930.312847222
     @t_lat = 39.742476
     @t_lon = -105.1786
   end
@@ -231,8 +242,9 @@ end
 class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
   def setup
     @t = CalcSun.new
+    @time = Time.new(2003, 10, 17, 12, 30, 30, '-07:00').getgm.to_datetime
+    @t_ajd = @time.ajd # 2_452_930.312847222
     @t_jd = Date.parse('2003-10-17').jd.to_f
-    @t_ajd = 2_452_930.312847222
     @t_lat = 39.742476
     @t_lon = -105.1786
   end
@@ -269,6 +281,13 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
     assert_equal(
       18.769795612672,
       @t.t_south(@t_ajd, @t_lon)
+    )
+  end
+
+  def test_gha
+    assert_equal(
+      116.27264999424,
+      @t.gha(@t_ajd)
     )
   end
 

@@ -16,6 +16,13 @@
 # define DJ00 2451545.0L
 # define RND12 1000000000000.0
 
+static inline double
+anp(double angle){
+  double w = fmod(angle, M2PI);
+  if (w < 0) w += M2PI;
+  return w;
+}
+
 /*
  * call-seq:
  *  initialize()
@@ -301,6 +308,15 @@ static VALUE func_right_ascension(VALUE self, VALUE vajd){
   return DBL2NUM(fmod(roundf((vra * R2D / 15.0) * RND12) / RND12, 24.0));
 }
 
+static VALUE func_gha(VALUE self, VALUE vajd){
+  double gmsa =
+  NUM2DBL(func_mean_sidetime(self, vajd)) * 15 * D2R;
+  double ra =
+  NUM2DBL(func_right_ascension(self, vajd)) * 15 * D2R;
+  double gha = anp(gmsa - ra);
+  return DBL2NUM(roundf(gha * R2D * RND12) / RND12);
+}
+
 static VALUE func_declination(VALUE self, VALUE vajd){
   double vex =
   NUM2DBL(func_ecliptic_x(self, vajd));
@@ -492,6 +508,7 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "eot_min", func_eot_min, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
   rb_define_method(cCalcSun, "equation_of_time", func_eot, 1);
+  rb_define_method(cCalcSun, "gha", func_gha, 1);
   rb_define_method(cCalcSun, "gmsa0", func_gmsa0, 1);
   rb_define_method(cCalcSun, "gmsa", func_gmsa, 1);
   rb_define_method(cCalcSun, "gmst0", func_gmst0, 1);
@@ -503,6 +520,7 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "longitude_of_perihelion", func_longitude_of_perihelion, 1);
   rb_define_method(cCalcSun, "mean_anomaly", func_mean_anomaly, 1);
   rb_define_method(cCalcSun, "mean_longitude", func_mean_longitude, 1);
+  rb_define_method(cCalcSun, "mean_sidereal_time", func_mean_sidetime, 1);
   rb_define_method(cCalcSun, "min_to_s", func_min_to_s, 1);
   rb_define_method(cCalcSun, "noon", func_noon, 3);
   rb_define_method(cCalcSun, "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);

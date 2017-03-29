@@ -212,45 +212,15 @@ static VALUE func_true_longitude(VALUE self, VALUE vajd){
   return DBL2NUM(roundf(vtl * RND12) / RND12);
 }
 
+/*
 static VALUE func_gmsa0(VALUE self, VALUE vajd){
   double tl =
   NUM2DBL(func_true_longitude(self, vajd));
   double st =
-  fmod(PI + tl, M2PI) * R2D;
+  anp(PI + tl) * R2D;
   return DBL2NUM(roundf(st * RND12) / RND12);
 }
-
-static VALUE func_gmsa(VALUE self, VALUE vajd){
-  double ajd = NUM2DBL(vajd);
-  double vt = fmod(ajd, 1.0) * 24.0 * 15.0;
-  double tl =
-  NUM2DBL(func_true_longitude(self, vajd));
-  double st =
-  fmod((PI + tl) * R2D, 360.0);
-  double mst = fmod((st + vt), 360.0);
-  // roundf(fmod(st + vt, 24) * RND12) / RND12
-  return DBL2NUM(roundf(mst * RND12) / RND12);
-}
-
-static VALUE func_gmst0(VALUE self, VALUE vajd){
-  double tl =
-  NUM2DBL(func_true_longitude(self, vajd));
-  double st =
-  fmod(PI + tl, M2PI) * R2D;
-  return DBL2NUM(roundf((st / 15.0) * RND12) / RND12);
-}
-
-static VALUE func_gmst(VALUE self, VALUE vajd){
-  double ajd = NUM2DBL(vajd);
-  double vt = fmod(ajd, 1.0) * 24.0;
-  double tl =
-  NUM2DBL(func_true_longitude(self, vajd));
-  double st =
-  fmod((PI + tl) * R2D, 360.0) / 15.0;
-  double mst = fmod((st + vt), 24.0);
-  // roundf(fmod(st + vt, 24) * RND12) / RND12
-  return DBL2NUM(roundf(mst * RND12) / RND12);
-}
+*/
 
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
@@ -263,9 +233,45 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
   (360.98564736629 * (ajd - 2451545.0)) +
   (0.000387933 * t * t) -
   (t * t * t / 38710000.0);
-  sidereal = fmod(sidereal, 360.0);
+  sidereal = anp(sidereal * D2R) * R2D;
   /* change to hours */
   return DBL2NUM(fmod(roundf((sidereal / 15.0) * RND12) / RND12, 24.0));
+}
+
+static VALUE func_gmsa0(VALUE self, VALUE vajd){
+  double msa0;
+  double ajd0 = NUM2DBL(vajd);
+  double ajdt = fmod(ajd0, 1.0);
+  if (ajdt <= 0.5){
+    ajd0 -= 0.5;
+    ajd0 = floor(ajd0) + 0.5;
+  }
+  else{
+    ajd0 = floor(ajd0) + 0.5;
+  }
+  msa0 =
+  NUM2DBL(func_mean_sidetime(self, DBL2NUM(ajd0))) * 15;
+  return DBL2NUM(roundf(msa0 * RND12) / RND12);
+}
+
+static VALUE func_gmsa(VALUE self, VALUE vajd){
+  double ajd = NUM2DBL(vajd) - 0.5;
+  double ajdt = fmod(ajd, 1.0);
+  double vtr = ajdt * 24.0 * 1.00273790935 * 15 * D2R;
+  double msar0 = NUM2DBL(func_gmsa0(self, vajd)) * D2R;
+  double msa = anp(msar0 + vtr) * R2D;
+  return DBL2NUM(roundf(msa * RND12) / RND12);
+}
+
+static VALUE func_gmst0(VALUE self, VALUE vajd){
+  double era0 =
+  NUM2DBL(func_gmsa0(self, vajd)) / 15.0;
+  return DBL2NUM(roundf(era0 * RND12) / RND12);
+}
+
+static VALUE func_gmst(VALUE self, VALUE vajd){
+  double vmst = NUM2DBL(func_gmsa(self, vajd)) / 15.0;
+  return DBL2NUM(roundf(vmst * RND12) / RND12);
 }
 
 static VALUE func_rv(VALUE self, VALUE vajd){

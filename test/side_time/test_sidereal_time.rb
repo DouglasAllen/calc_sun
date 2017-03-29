@@ -98,8 +98,8 @@ class TestSideTime < Test::Unit::TestCase
 
   def test2_comp_gmsts1
     assert_equal(
-      21.143071227904,
-      @v.gmst(@t_ajd + 0.5)
+      21.234372837376,
+      @v.gmst(@t_ajd)
     )
   end
 end

@@ -211,28 +211,28 @@ class TestCalcSun200 < Test::Unit::TestCase # MiniTest::Test
 
   def test_gmsa0
     assert_equal(
-      24.024820219904,
+      25.089399586816,
       @t.gmsa0(@t_ajd)
     )
   end
 
   def test_gmst0
     assert_equal(
-      1.60165462016,
+      1.672626700288,
       @t.gmst0(@t_ajd)
     )
   end
 
   def test_gmsa
     assert_equal(
-      136.649820340224,
+      318.515579977728,
       @t.gmsa(@t_ajd)
     )
   end
 
   def test_gmst
     assert_equal(
-      9.109988442112,
+      21.234372837376,
       @t.gmst(@t_ajd)
     )
   end

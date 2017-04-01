@@ -127,6 +127,15 @@ static VALUE func_equation_of_center(VALUE self, VALUE vajd){
   return DBL2NUM(roundf(veoc * RND12) / RND12);
 }
 
+static VALUE func_true_anomaly(VALUE self, VALUE vajd){
+  double vma =
+  NUM2DBL(func_mean_anomaly(self, vajd));
+  double veoc =
+  NUM2DBL(func_equation_of_center(self, vajd));
+  double vta = vma + veoc;
+  return DBL2NUM(roundf(vta * RND12) / RND12);
+}
+
 static VALUE func_mean_longitude(VALUE self, VALUE vajd){
   double jd = NUM2DBL(vajd);
   double d = jd - DJ00;
@@ -154,15 +163,6 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
   double vooe =
   (23.439291 - 3.563E-7 * d) * D2R;
   return DBL2NUM(roundf(vooe * RND12) / RND12);
-}
-
-static VALUE func_true_anomaly(VALUE self, VALUE vajd){
-  double vma =
-  NUM2DBL(func_mean_anomaly(self, vajd));
-  double veoc =
-  NUM2DBL(func_equation_of_center(self, vajd));
-  double vta = vma + veoc;
-  return DBL2NUM(roundf(vta * RND12) / RND12);
 }
 
 static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
@@ -198,7 +198,7 @@ static VALUE func_yv(VALUE self, VALUE vajd){
 static VALUE func_true_anomaly1(VALUE self, VALUE vajd){
   double xv = NUM2DBL(func_xv(self, vajd));
   double yv = NUM2DBL(func_yv(self, vajd));
-  double vta = atan2(yv, xv);
+  double vta = anp(atan2(yv, xv));
   return DBL2NUM(roundf(vta * RND12) / RND12);
 }
 
@@ -384,11 +384,6 @@ static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
   //return DBL2NUM(lst - ra);
 }
 
-static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlon){
-  return Qnil;
-}
-
-
 static VALUE func_t_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
@@ -442,21 +437,28 @@ static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   return func_ajd_2_datetime(self, vst);
 }
 
-/* Get the days to J2000 h is UT in decimal hours only works between 1901 to 2099 */
+/* Get the days to J2000 h is UT in decimal hours only works between 1901 to 2099
 static inline double
-GetDaysTillJ2000(int year, int month, int day, double hours){
-     double days_till_J2000;
-     days_till_J2000 = 367 * year - 7 * (
-       year + (month + 9) / 12) / 4 + 275 * month / 9 + day - 730531.5 + hours / 24;
-     return(days_till_J2000);
+days_since_2000_Jan_0(int year, int month, int day, double hours){
+  double days_till_J2000;
+  days_till_J2000 = 367 * year - (7 * (
+    year + (month + 9) / 12) / 4) + 275 * month / 9 + day - 730531.5 + hours / 24;
+  return(days_till_J2000);
 }
+*/
+
+#define days_since_2000_Jan_0(y,m,d) \
+    (367L * (y) - ((7 * ((y) + (((m) + 9) / 12))) / 4) + ((275 * (m))  /9) + (d) - 730531.5L)
 
 static VALUE func_jd_from_2000(VALUE self, VALUE vajd){
-  int year = NUM2INT(rb_funcall(vajd, rb_intern("year"), 0));
-  int month = NUM2INT(rb_funcall(vajd, rb_intern("month"), 0));
-  int day = NUM2INT(rb_funcall(vajd, rb_intern("day"), 0));
-  double days = GetDaysTillJ2000(year, month, day, 12);
-  return DBL2NUM(roundf(days * RND12) / RND12);
+  /*VALUE vdatetime = func_ajd_2_datetime(self, vajd);
+  int year = NUM2INT(rb_funcall(vdatetime, rb_intern("year"), 0));
+  int month = NUM2INT(rb_funcall(vdatetime, rb_intern("month"), 0));
+  int day = NUM2INT(rb_funcall(vdatetime, rb_intern("day"), 0));
+  double days = days_since_2000_Jan_0(year, month, day);*/
+  double ajd = NUM2DBL(vajd);
+  double days = ajd - 2451545.0;
+  return INT2NUM(days);
 }
 
 static VALUE func_days_from_2000(VALUE self, VALUE vajd, VALUE vlon){
@@ -475,7 +477,7 @@ static VALUE func_eot(VALUE self, VALUE vajd){
   NUM2DBL(func_true_longitude(self, vajd));
   double ra = 15.0 * D2R *
   NUM2DBL(func_right_ascension(self, vajd));
-  return DBL2NUM(roundf(fmod((ma - ta + tl - ra), M2PI) * R2D * RND12) / RND12 );
+  return DBL2NUM(roundf(anp(ma - ta + tl - ra) * R2D * RND12) / RND12 );
 }
 
 static VALUE func_eot_min(VALUE self, VALUE vajd){
@@ -485,6 +487,34 @@ static VALUE func_eot_min(VALUE self, VALUE vajd){
 
 static VALUE func_min_to_s(VALUE self, VALUE vmin){
   return Qnil;
+}
+
+static VALUE func_lha(VALUE self, VALUE vajd, VALUE vlon){
+  double lon = NUM2DBL(vlon) * D2R;
+  double gha = NUM2DBL(func_gha(self, vajd)) * D2R;
+  double lha = anp(gha + lon) * R2D;
+  return DBL2NUM(roundf(lha * RND12) / RND12);
+}
+
+static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double lat = NUM2DBL(vlat) * D2R;
+  double delta = NUM2DBL(func_declination(self, vajd)) * D2R;
+  double lha = NUM2DBL(func_lha(self, vajd, vlon)) * D2R;
+  double alt =
+  asin(sin(lat) * sin(delta) +
+    cos(lat) * cos(delta) * cos(lha)) * R2D;
+  return DBL2NUM(roundf(alt * RND12) / RND12);
+}
+
+static VALUE func_azimuth(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double lat = NUM2DBL(vlat) * D2R;
+  double delta = NUM2DBL(func_declination(self, vajd)) * D2R;
+  double lha = NUM2DBL(func_lha(self, vajd, vlon)) * D2R;
+  double az;
+  az =
+  atan2(sin(lha), cos(lha) * sin(lat) -
+            tan(delta) * cos(lat)) * R2D + 180.0;
+  return DBL2NUM(roundf(az * RND12) / RND12);
 }
 
 static VALUE func_rev12(VALUE self, VALUE vx){
@@ -503,7 +533,8 @@ void Init_calc_sun(void){
   rb_define_attr(cCalcSun, "date", 1, 1);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "ajd2dt", func_ajd_2_datetime, 1);
-  rb_define_method(cCalcSun, "altitude", func_altitude, 2);
+  rb_define_method(cCalcSun, "altitude", func_altitude, 3);
+  rb_define_method(cCalcSun, "azimuth", func_azimuth, 3);
   rb_define_method(cCalcSun, "daylight_time", func_dlt, 2);
   rb_define_method(cCalcSun, "declination", func_declination, 1);
   rb_define_method(cCalcSun, "diurnal_arc", func_diurnal_arc, 2);
@@ -522,6 +553,7 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "jd", func_get_jd, 1);
   rb_define_method(cCalcSun, "jd2000_dif", func_jd_from_2000, 1);
   rb_define_method(cCalcSun, "jd2000_dif_lon", func_days_from_2000, 2);
+  rb_define_method(cCalcSun, "lha", func_lha, 2);
   rb_define_method(cCalcSun, "local_sidereal_time", func_local_sidetime, 2);
   rb_define_method(cCalcSun, "longitude_of_perihelion", func_longitude_of_perihelion, 1);
   rb_define_method(cCalcSun, "mean_anomaly", func_mean_anomaly, 1);

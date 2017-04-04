@@ -111,6 +111,7 @@ static VALUE func_eccentricity(VALUE self, VALUE vajd){
   return DBL2NUM(roundf(ve * RND12) / RND12);
 }
 
+/*
 static VALUE func_equation_of_center(VALUE self, VALUE vajd){
   double vma =
   NUM2DBL(func_mean_anomaly(self, vajd));
@@ -124,6 +125,27 @@ static VALUE func_equation_of_center(VALUE self, VALUE vajd){
   ve2 * sin(vma) +
   vesqr54 * sin(2 * vma) +
   vecube12 * (13.0 * sin(3 * vma) - 3.0 * sin(vma));
+  return DBL2NUM(roundf(veoc * RND12) / RND12);
+}
+*/
+
+static VALUE func_equation_of_center(VALUE self, VALUE vajd){
+  double mas =
+  NUM2DBL(func_mean_anomaly(self, vajd));
+  double eoe =
+  NUM2DBL(func_eccentricity(self, vajd));
+  double sin1a = sin(1.0 * mas) * 1.0 / 4.0;
+  double sin1b = sin(1.0 * mas) * 5.0 / 96.0;
+  double sin2a = sin(2.0 * mas) * 11.0 / 24.0;
+  double sin2b = sin(2.0 * mas) * 5.0 / 4.0;
+  double sin3a = sin(3.0 * mas) * 13.0 / 12.0;
+  double sin3b = sin(3.0 * mas) * 43.0 / 64.0;
+  double sin4 = sin(4.0 * mas) * 103.0 / 96.0;
+  double sin5 = sin(5.0 * mas) * 1097.0 / 960.0;
+  double ad3 = sin3a - sin1a;
+  double ad4 = sin4 - sin2a;
+  double ad5 = sin5 + sin1b - sin3b;
+  double veoc = eoe * (sin1a * 8.0 + eoe * (sin2b + eoe * (ad3 + eoe * (ad4 + eoe * ad5))));
   return DBL2NUM(roundf(veoc * RND12) / RND12);
 }
 

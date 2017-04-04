@@ -93,7 +93,7 @@ class TestAngles1 < Test::Unit::TestCase # MiniTest::Test
 
   def test_equation_of_center
     assert_equal(
-      -0.032718979072,
+      -0.0327188992,
       @t.equation_of_center(@ajd)
     )
   end
@@ -284,42 +284,42 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
 
   def test_daylight_time
     assert_equal(
-      11.114992631808,
+      11.114991583232,
       @t.daylight_time(@ajd, @lat)
     )
   end
 
   def test_diurnal_arc
     assert_equal(
-      5.557496315904,
+      5.557495791616,
       @t.diurnal_arc(@ajd, @lat)
     )
   end
 
   def test_t_south
     assert_equal(
-      18.769795612672,
+      18.769797709824,
       @t.t_south(@ajd, @lon)
     )
   end
 
   def test_t_rise
     assert_equal(
-      13.21229877248,
+      13.212301918208,
       @t.t_rise(@ajd, @lat, @lon)
     )
   end
 
   def test_t_mid_day
     assert_equal(
-      18.769795612672,
+      18.769797709824,
       @t.t_mid_day(@ajd, @lat, @lon)
     )
   end
 
   def test_t_set
     assert_equal(
-      0.327291928576,
+      0.32729350144,
       @t.t_set(@ajd, @lat, @lon)
     )
   end

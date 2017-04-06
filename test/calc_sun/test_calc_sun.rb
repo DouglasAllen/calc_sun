@@ -324,24 +324,45 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
     )
   end
 
-  def test_rise_time
+  def test_rise
     assert_equal(
       'Fri, 17 Oct 2003 13:12:44 GMT',
       @t.rise(@ajd, @lat, @lon).httpdate
     )
   end
 
-  def test_noon_time
+  def test_rise_jd
+    assert_equal(
+      2_452_930.0505125797,
+      @t.rise_jd(@ajd, @lat, @lon)
+    )
+  end
+
+  def test_noon
     assert_equal(
       'Fri, 17 Oct 2003 18:46:11 GMT',
       @t.noon(@ajd, @lat, @lon).httpdate
     )
   end
 
-  def test_set_time
+  def test_noon_jd
+    assert_equal(
+      2_452_930.2820749045,
+      @t.noon_jd(@ajd, @lat, @lon)
+    )
+  end
+
+  def test_set
     assert_equal(
       'Sat, 18 Oct 2003 00:19:38 GMT',
       @t.set(@ajd, @lat, @lon).httpdate
+    )
+  end
+
+  def test_set_jd
+    assert_equal(
+      2_452_930.5136372293,
+      @t.set_jd(@ajd, @lat, @lon)
     )
   end
 end

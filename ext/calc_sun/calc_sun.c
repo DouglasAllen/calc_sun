@@ -3,18 +3,19 @@
 #include <time.h>
 /* if PI's not defined, define it */
 #ifndef PI
-#define PI 3.14159265358979323846
+#define PI 3.1415926535897932384626433832795028841971L
 #endif
 #ifndef DBL2NUM
 # define DBL2NUM(dbl) rb_float_new(dbl)
 #endif
-# define R2D 57.295779513082320876798154814105
-# define D2R 0.017453292519943295769236907684886
+# define PI2 PI * 2.0
+# define R2D 57.295779513082320876798154814105L
+# define D2R 0.017453292519943295769236907684886L
 # define M2PI M_PI * 2.0
 # define INV24 1.0 / 24.0
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0L
-# define RND12 1000000000000.0
+# define RND12 1000000000000.0L
 
 static inline double
 anp(double angle){
@@ -433,6 +434,13 @@ static VALUE func_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   return func_ajd_2_datetime(self, vrt);
 }
 
+static VALUE func_rise_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double rt = NUM2DBL(func_t_rise(self, vajd, vlat, vlon));
+  double ajd = NUM2DBL(vajd);
+  double rtajd = floor(ajd) - 0.5 + rt / 24.0;
+  return DBL2NUM(rtajd);
+}
+
 static VALUE func_noon(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double nt = NUM2DBL(func_t_south(self, vajd, vlon));
   double ajd = NUM2DBL(vajd);
@@ -441,6 +449,13 @@ static VALUE func_noon(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   //VALUE date = rb_sprintf("Sun noon: %2.0f:%02.0f UTC\n",
   //floor(nt), floor(fmod(nt, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vnt);
+}
+
+static VALUE func_noon_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double nt = NUM2DBL(func_t_south(self, vajd, vlon));
+  double ajd = NUM2DBL(vajd);
+  double ntajd = floor(ajd) - 0.5 + nt / 24.0;
+  return DBL2NUM(ntajd);
 }
 
 static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -457,6 +472,18 @@ static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   //VALUE date = rb_sprintf("Sun set: %2.0f:%02.0f UTC\n",
   //floor(st), floor(fmod(st, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vst);
+}
+
+static VALUE func_set_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double stajd;
+  double st = NUM2DBL(func_t_set(self, vajd, vlat, vlon));
+  double nt = NUM2DBL(func_t_mid_day(self, vajd, vlat, vlon));
+  double ajd = NUM2DBL(vajd);
+  if (st < nt){
+    st += 24.0;
+  }
+  stajd = floor(ajd) - 0.5 + st / 24.0;
+  return DBL2NUM(stajd);
 }
 
 /* Get the days to J2000 h is UT in decimal hours only works between 1901 to 2099
@@ -583,12 +610,15 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "mean_sidereal_time", func_mean_sidetime, 1);
   rb_define_method(cCalcSun, "min_to_s", func_min_to_s, 1);
   rb_define_method(cCalcSun, "noon", func_noon, 3);
+  rb_define_method(cCalcSun, "noon_jd", func_noon_jd, 3);
   rb_define_method(cCalcSun, "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun, "radius_vector", func_rv, 1);
   rb_define_method(cCalcSun, "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun, "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun, "rise", func_rise, 3);
+  rb_define_method(cCalcSun, "rise_jd", func_rise_jd, 3);
   rb_define_method(cCalcSun, "set", func_set, 3);
+  rb_define_method(cCalcSun, "set_jd", func_set_jd, 3);
   rb_define_method(cCalcSun, "set_datetime", func_set_datetime, 1);
   rb_define_method(cCalcSun, "t_mid_day", func_t_mid_day, 3);
   rb_define_method(cCalcSun, "t_rise", func_t_rise, 3);

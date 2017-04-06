@@ -85,10 +85,10 @@ static VALUE func_get_jd(VALUE self, VALUE vdatetime){
 
 /*
  * call-seq:
- *  mean_anomaly(date)
+ *  mean_anomaly(ajd)
  *
- * convert Date or DateTime object to float
- * representing Solar Mean Anomaly in radians.
+ * given an Astronomical Julian Day Number
+ * returns Mean Anomaly of Sun in radians.
  *
  */
 static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
@@ -102,7 +102,14 @@ static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
     t * (1.0 / -313315926.8929504))))) * D2R, M2PI);
   return DBL2NUM(roundf(vma * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  eccentricity(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Eccentriciy of Earth Orbit around Sun.
+ *
+ */
 static VALUE func_eccentricity(VALUE self, VALUE vajd){
   double jd = NUM2DBL(vajd);
   double d = jd - DJ00;
@@ -113,21 +120,12 @@ static VALUE func_eccentricity(VALUE self, VALUE vajd){
 }
 
 /*
-static VALUE func_equation_of_center(VALUE self, VALUE vajd){
-  double vma =
-  NUM2DBL(func_mean_anomaly(self, vajd));
-  double ve =
-  NUM2DBL(func_eccentricity(self, vajd));
-  double ve2 = ve * 2.0;
-  double vesqr = ve * ve;
-  double vesqr54 = 5.0 / 4.0 * vesqr;
-  double vecube12 = (vesqr * ve) / 12.0;
-  double veoc =
-  ve2 * sin(vma) +
-  vesqr54 * sin(2 * vma) +
-  vecube12 * (13.0 * sin(3 * vma) - 3.0 * sin(vma));
-  return DBL2NUM(roundf(veoc * RND12) / RND12);
-}
+ * call-seq:
+ *  equation_of_center(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Equation of Center in radians.
+ *
 */
 
 static VALUE func_equation_of_center(VALUE self, VALUE vajd){
@@ -149,7 +147,14 @@ static VALUE func_equation_of_center(VALUE self, VALUE vajd){
   double veoc = eoe * (sin1a * 8.0 + eoe * (sin2b + eoe * (ad3 + eoe * (ad4 + eoe * ad5))));
   return DBL2NUM(roundf(veoc * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  true_anomaly(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns True Anomaly of Sun in radians.
+ *
+*/
 static VALUE func_true_anomaly(VALUE self, VALUE vajd){
   double vma =
   NUM2DBL(func_mean_anomaly(self, vajd));
@@ -158,7 +163,14 @@ static VALUE func_true_anomaly(VALUE self, VALUE vajd){
   double vta = vma + veoc;
   return DBL2NUM(roundf(vta * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  mean_longitude(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Mean Longitude of Sun in radians.
+ *
+*/
 static VALUE func_mean_longitude(VALUE self, VALUE vajd){
   double jd = NUM2DBL(vajd);
   double d = jd - DJ00;
@@ -169,7 +181,14 @@ static VALUE func_mean_longitude(VALUE self, VALUE vajd){
     ) * D2R, M2PI);
   return DBL2NUM(roundf(vml * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  eccentric_anomaly(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Eccentric Anomaly of Sun in radians.
+ *
+*/
 static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
   double ve =
   NUM2DBL(func_eccentricity(self, vajd));
@@ -179,7 +198,14 @@ static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
   vml + ve * sin(vml) * (1.0 + ve * cos(vml));
   return DBL2NUM(roundf(vea * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  obliquity_of_ecliptic(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Earth Tilt (Obliquity) in radians.
+ *
+*/
 static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
   double jd = NUM2DBL(vajd);
   double d = jd - DJ00;
@@ -187,7 +213,18 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
   (23.439291 - 3.563E-7 * d) * D2R;
   return DBL2NUM(roundf(vooe * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  longitude_of_perihelion(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Longitude of Sun at Perihelion in radians.
+ *
+ * Note: Try not to use this as it is not standard practice
+ *       for these types of calculations. True Longitude may
+ *       be found from Mean Longitude and Equation of Center.
+ *
+*/
 static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
   double jd = NUM2DBL(vajd);
   double d = jd - DJ00;
@@ -198,7 +235,15 @@ static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
     ) * D2R, M2PI);
   return DBL2NUM(roundf(vlop * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  xv(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns X component of Radius Vector in radians.
+ *
+ *
+*/
 static VALUE func_xv(VALUE self, VALUE vajd){
   double vea =
   NUM2DBL(func_eccentric_anomaly(self, vajd));
@@ -207,7 +252,15 @@ static VALUE func_xv(VALUE self, VALUE vajd){
   double vxv = cos(vea) - ve;
   return DBL2NUM(roundf(vxv * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  xv(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Y component of Radius Vector in radians.
+ *
+ *
+*/
 static VALUE func_yv(VALUE self, VALUE vajd){
   double vea =
   NUM2DBL(func_eccentric_anomaly(self, vajd));
@@ -217,34 +270,44 @@ static VALUE func_yv(VALUE self, VALUE vajd){
   sqrt(1.0 - ve * ve) * sin(vea);
   return DBL2NUM(roundf(vyv * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  true_anomaly1(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns True Anomaly of Sun in radians.
+ *
+*/
 static VALUE func_true_anomaly1(VALUE self, VALUE vajd){
   double xv = NUM2DBL(func_xv(self, vajd));
   double yv = NUM2DBL(func_yv(self, vajd));
   double vta = anp(atan2(yv, xv));
   return DBL2NUM(roundf(vta * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  true_longitude1(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns True Longitude of Sun in radians.
+ *
+*/
 static VALUE func_true_longitude(VALUE self, VALUE vajd){
-  double vta =
-  NUM2DBL(func_true_anomaly(self, vajd));
-  double vlop =
-  NUM2DBL(func_longitude_of_perihelion(self, vajd));
-  double vtl =
-  fmod(vta + vlop, M2PI);
+  double vml =
+  NUM2DBL(func_mean_longitude(self, vajd));
+  double veoc =
+  NUM2DBL(func_equation_of_center(self, vajd));
+  double vtl = anp(vml + veoc);
   return DBL2NUM(roundf(vtl * RND12) / RND12);
 }
-
 /*
-static VALUE func_gmsa0(VALUE self, VALUE vajd){
-  double tl =
-  NUM2DBL(func_true_longitude(self, vajd));
-  double st =
-  anp(PI + tl) * R2D;
-  return DBL2NUM(roundf(st * RND12) / RND12);
-}
+ * call-seq:
+ *  mean_sidereal_time(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Mean Sidereal Time of Sun in hours.
+ *
 */
-
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
   long double sidereal;
@@ -485,26 +548,10 @@ static VALUE func_set_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   stajd = floor(ajd) - 0.5 + st / 24.0;
   return DBL2NUM(stajd);
 }
-
-/* Get the days to J2000 h is UT in decimal hours only works between 1901 to 2099
-static inline double
-days_since_2000_Jan_0(int year, int month, int day, double hours){
-  double days_till_J2000;
-  days_till_J2000 = 367 * year - (7 * (
-    year + (month + 9) / 12) / 4) + 275 * month / 9 + day - 730531.5 + hours / 24;
-  return(days_till_J2000);
-}
-*/
-
 #define days_since_2000_Jan_0(y,m,d) \
     (367L * (y) - ((7 * ((y) + (((m) + 9) / 12))) / 4) + ((275 * (m))  /9) + (d) - 730531.5L)
 
 static VALUE func_jd_from_2000(VALUE self, VALUE vajd){
-  /*VALUE vdatetime = func_ajd_2_datetime(self, vajd);
-  int year = NUM2INT(rb_funcall(vdatetime, rb_intern("year"), 0));
-  int month = NUM2INT(rb_funcall(vdatetime, rb_intern("month"), 0));
-  int day = NUM2INT(rb_funcall(vdatetime, rb_intern("day"), 0));
-  double days = days_since_2000_Jan_0(year, month, day);*/
   double ajd = NUM2DBL(vajd);
   double days = ajd - 2451545.0;
   return INT2NUM(days);

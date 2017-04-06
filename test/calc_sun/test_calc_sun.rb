@@ -156,7 +156,7 @@ class TestAngles1 < Test::Unit::TestCase # MiniTest::Test
 
   def test_true_longitude
     assert_equal(
-      3.560904851456,
+      3.56085137408,
       @t.true_longitude(@ajd)
     )
   end
@@ -230,35 +230,35 @@ class TestAngles3 < Test::Unit::TestCase # MiniTest::Test
 
   def test_ecliptic_x
     assert_equal(
-      -0.927144411136,
+      -0.927166562304,
       @t.ecliptic_x(@ajd)
     )
   end
 
   def test_ecliptic_y
     assert_equal(
-      -0.413272604672,
+      -0.413223026688,
       @t.ecliptic_y(@ajd)
     )
   end
 
   def test_right_ascension
     assert_equal(
-      13.48286283776,
+      13.482670948352,
       @t.right_ascension(@ajd)
     )
   end
 
   def test_gha
     assert_equal(
-      116.27264999424,
+      116.275527286784,
       @t.gha(@ajd)
     )
   end
 
   def test_declination
     assert_equal(
-      -9.198886715392,
+      -9.197802487808,
       @t.declination(@ajd)
     )
   end
@@ -284,84 +284,84 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
 
   def test_daylight_time
     assert_equal(
-      11.114991583232,
+      11.115122655232,
       @t.daylight_time(@ajd, @lat)
     )
   end
 
   def test_diurnal_arc
     assert_equal(
-      5.557495791616,
+      5.557561327616,
       @t.diurnal_arc(@ajd, @lat)
     )
   end
 
   def test_t_south
     assert_equal(
-      18.769797709824,
+      18.769602674688,
       @t.t_south(@ajd, @lon)
     )
   end
 
   def test_t_rise
     assert_equal(
-      13.212301918208,
+      13.212040822784,
       @t.t_rise(@ajd, @lat, @lon)
     )
   end
 
   def test_t_mid_day
     assert_equal(
-      18.769797709824,
+      18.769602674688,
       @t.t_mid_day(@ajd, @lat, @lon)
     )
   end
 
   def test_t_set
     assert_equal(
-      0.32729350144,
+      0.327164002304,
       @t.t_set(@ajd, @lat, @lon)
     )
   end
 
   def test_rise
     assert_equal(
-      'Fri, 17 Oct 2003 13:12:44 GMT',
+      'Fri, 17 Oct 2003 13:12:43 GMT',
       @t.rise(@ajd, @lat, @lon).httpdate
     )
   end
 
   def test_rise_jd
     assert_equal(
-      2_452_930.0505125797,
+      2_452_930.050501701,
       @t.rise_jd(@ajd, @lat, @lon)
     )
   end
 
   def test_noon
     assert_equal(
-      'Fri, 17 Oct 2003 18:46:11 GMT',
+      'Fri, 17 Oct 2003 18:46:10 GMT',
       @t.noon(@ajd, @lat, @lon).httpdate
     )
   end
 
   def test_noon_jd
     assert_equal(
-      2_452_930.2820749045,
+      2_452_930.2820667783,
       @t.noon_jd(@ajd, @lat, @lon)
     )
   end
 
   def test_set
     assert_equal(
-      'Sat, 18 Oct 2003 00:19:38 GMT',
+      'Sat, 18 Oct 2003 00:19:37 GMT',
       @t.set(@ajd, @lat, @lon).httpdate
     )
   end
 
   def test_set_jd
     assert_equal(
-      2_452_930.5136372293,
+      2_452_930.5136318333,
       @t.set_jd(@ajd, @lat, @lon)
     )
   end
@@ -394,56 +394,56 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
 
   def test_equation_of_time
     assert_equal(
-      3.656521089024,
+      3.656335491072,
       @t.equation_of_time(@ajd)
     )
   end
 
   def test_eot_min
     assert_equal(
-      14.626084356096,
+      14.625341964288,
       @t.eot_min(@ajd)
     )
   end
 
   def test_lha
     assert_equal(
-      11.094050471936,
+      11.09692776448,
       @t.lha(@ajd, @lon)
     )
   end
 
   def test_altitude
     assert_equal(
-      39.98945902592,
+      39.989974925312,
       @t.altitude(@ajd, @lat, @lon)
     )
   end
 
   def test_azimuth
     assert_equal(
-      194.354333351936,
+      194.358242443264,
       @t.azimuth(@ajd, @lat, @lon)
     )
   end
 
   def test_rise_az
     assert_equal(
-      101.228025479168,
+      101.226540695552,
       @t.rise_az(@ajd, @lat, @lon)
     )
   end
 
   def test_noon_az
     assert_equal(
-      180.018873368576,
+      180.018839814144,
       @t.noon_az(@ajd, @lat, @lon)
     )
   end
 
   def test_set_az
     assert_equal(
-      258.665965682688,
+      258.667374968832,
       @t.set_az(@ajd, @lat, @lon)
     )
   end

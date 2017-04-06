@@ -5,7 +5,7 @@
 
 Home    :: https://rubygems.org/gems/calc_sun
 Code    :: https://github.com/DouglasAllen/calc_sun
-RDoc    :: http://www.rubydoc.info/gems/calc_sun/0.1.1
+RDoc    :: http://www.rubydoc.info/gems/calc_sun/1.2.9
 Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 
 
@@ -31,7 +31,7 @@ since version 1.2.6
    or make a batchfile to start your envirnment with 'run devkitvars'
    cd to calc_sun dir
    $> gem build calc_sun.gemspec
-   $> gem install calc_sun-1.2.6.gem -l
+   $> gem install calc_sun-1.2.9.gem -l
 
 === DEVELOPERS:
 
@@ -66,11 +66,19 @@ and generate the RDoc.
 
     # set the date with set_date as date is just an ivar
     day = cs.set_datetime('2003-10-17 12:30:30')
-    puts day
+    puts day.httpdate
 
-    puts "Sun rise: #{cs.rise(day.ajd, lat, lon).httpdate}"
-    puts "Sun noon: #{cs.noon(day.ajd, lat, lon).httpdate}"
-    puts "Sun set: #{cs.set(day.ajd, lat, lon).httpdate}"
+    puts "Sun rise: #{cs.rise(day.jd, lat, lon).httpdate}"
+    puts "Sun noon: #{cs.noon(day.jd, lat, lon).httpdate}"
+    puts "Sun set: #{cs.set(day.jd, lat, lon).httpdate}"
+
+    puts "Sun AJD rise: #{cs.rise_jd(day.jd, lat, lon)}"
+    puts "Sun AJD noon: #{cs.noon_jd(day.jd, lat, lon)}"
+    puts "Sun AJD set: #{cs.set_jd(day.jd, lat, lon)}"
+
+    puts "Sun azimuth rise: #{cs.rise_az(day.jd, lat, lon)}"
+    puts "Sun azimuth noon: #{cs.noon_az(day.jd, lat, lon)}"
+    puts "Sun azimuth set: #{cs.set_az(day.jd, lat, lon)}"
 
 === LICENSE:
 

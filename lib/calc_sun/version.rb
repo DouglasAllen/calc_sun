@@ -2,5 +2,5 @@
 
 # class file CalcSun
 class CalcSun
-  VERSION = '1.2.8'.freeze
+  VERSION = '1.2.9'.freeze
 end

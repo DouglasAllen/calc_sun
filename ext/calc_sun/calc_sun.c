@@ -566,6 +566,24 @@ static VALUE func_azimuth(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   return DBL2NUM(roundf(az * RND12) / RND12);
 }
 
+static VALUE func_rise_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double rjd = NUM2DBL(func_rise_jd(self, vajd, vlat, vlon));
+  double raz = NUM2DBL(func_azimuth(self, DBL2NUM(rjd), vlat, vlon));
+  return DBL2NUM(raz);
+}
+
+static VALUE func_noon_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double njd = NUM2DBL(func_noon_jd(self, vajd, vlat, vlon));
+  double naz = NUM2DBL(func_azimuth(self, DBL2NUM(njd), vlat, vlon));
+  return DBL2NUM(naz);
+}
+
+static VALUE func_set_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
+  double sjd = NUM2DBL(func_set_jd(self, vajd, vlat, vlon));
+  double saz = NUM2DBL(func_azimuth(self, DBL2NUM(sjd), vlat, vlon));
+  return DBL2NUM(saz);
+}
+
 static VALUE func_rev12(VALUE self, VALUE vx){
   double x = NUM2DBL(vx);
   return DBL2NUM(x - 24.0 * floor(x * INV24 + 0.5));
@@ -611,14 +629,17 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "min_to_s", func_min_to_s, 1);
   rb_define_method(cCalcSun, "noon", func_noon, 3);
   rb_define_method(cCalcSun, "noon_jd", func_noon_jd, 3);
+  rb_define_method(cCalcSun, "noon_az", func_noon_az, 3);
   rb_define_method(cCalcSun, "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun, "radius_vector", func_rv, 1);
   rb_define_method(cCalcSun, "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun, "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun, "rise", func_rise, 3);
   rb_define_method(cCalcSun, "rise_jd", func_rise_jd, 3);
+  rb_define_method(cCalcSun, "rise_az", func_rise_az, 3);
   rb_define_method(cCalcSun, "set", func_set, 3);
   rb_define_method(cCalcSun, "set_jd", func_set_jd, 3);
+  rb_define_method(cCalcSun, "set_az", func_set_az, 3);
   rb_define_method(cCalcSun, "set_datetime", func_set_datetime, 1);
   rb_define_method(cCalcSun, "t_mid_day", func_t_mid_day, 3);
   rb_define_method(cCalcSun, "t_rise", func_t_rise, 3);

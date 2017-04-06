@@ -426,4 +426,25 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
       @t.azimuth(@ajd, @lat, @lon)
     )
   end
+
+  def test_rise_az
+    assert_equal(
+      101.228025479168,
+      @t.rise_az(@ajd, @lat, @lon)
+    )
+  end
+
+  def test_noon_az
+    assert_equal(
+      180.018873368576,
+      @t.noon_az(@ajd, @lat, @lon)
+    )
+  end
+
+  def test_set_az
+    assert_equal(
+      258.665965682688,
+      @t.set_az(@ajd, @lat, @lon)
+    )
+  end
 end

@@ -12,7 +12,8 @@ Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 === DESCRIPTION:
 
 Calculate Sunrise, Noon, and Sunset using native C extension.
-An example is supplied to show this gem usage.
+An example is supplied to show this gem usage. Some new features added
+since version 1.2.6
 
 === INSTALL:  Note: older version
 

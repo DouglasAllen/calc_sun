@@ -9,11 +9,11 @@ Gem::Specification.new do |spec|
   spec.author        = 'Douglas Allen'
   spec.email         = ['kb9agt@gmail.com']
   spec.summary       = 'Calculates Sun Times ea. rise, noon, set'
-  spec.description   = 'supply the date yyyy-mm-dd, latitude decimal, and
+  spec.description   = 'supply the date as a Julian Day Number, latitude decimal, and
                         longitude decimal in the calls to each method
-                        rise(date, lat, lon),
-                        noon(date, lat, lon), and
-                        set(date, lat, lon)'
+                        rise(jd, lat, lon),
+                        noon(jd, lat, lon), and
+                        set(jd, lat, lon)'
   spec.homepage      = 'https://github.com/DouglasAllen/calc_sun'
   spec.license       = 'MIT'
   require 'English'

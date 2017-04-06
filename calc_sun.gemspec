@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
     f.match(%r{^(test|spec|features)/})
   end
   require 'rake'
-  spec.extensions << 'ext/calc_sun/extconf.rb'
+  spec.extensions << 'ext/calc_sun/extconf.rb ext/side_time/extconf.rb'
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
   spec.platform = Gem::Platform::RUBY

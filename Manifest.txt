@@ -1,6 +1,5 @@
 .autotest
 .gitignore
-.source_index
 .travis.yml
 CODE_OF_CONDUCT.md
 Gemfile

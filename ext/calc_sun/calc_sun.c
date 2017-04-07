@@ -16,7 +16,9 @@
 # define INV360 1.0 / 360.0
 # define DJ00 2451545.0L
 # define RND12 1000000000000.0L
-
+/* macro for normalizing
+* angles into 0-2pie range
+*/
 static inline double
 anp(double angle){
   double w = fmod(angle, M2PI);
@@ -28,7 +30,7 @@ anp(double angle){
  * call-seq:
  *  initialize()
  *
- * Create CalcSun class Ruby object.
+ * Create CalcSun class instance Ruby object.
  *
  */
 static VALUE t_init(VALUE self){
@@ -36,9 +38,14 @@ static VALUE t_init(VALUE self){
 }
 /*
  * call-seq:
- *  date('yyyy-mm-dd')
+ *  date('yyyy-mm-ddT00:00:00+/-zoneoffset')
+ * or
+ *  date('20010203T040506+0700')
+ * or
+ *  date('3rd Feb 2001 04:05:06 PM')
  *
- * convert input string to DateTime object.
+ * given a string representing date time
+ * convert to DateTime object.
  *
  */
 static VALUE func_set_datetime(VALUE self, VALUE vdatetime){
@@ -50,7 +57,8 @@ static VALUE func_set_datetime(VALUE self, VALUE vdatetime){
  * call-seq:
  *  ajd2dt(ajd)
  *
- * convert input float to DateTime object.
+ * give Astronomical Julian Day Number
+ * convert to DateTime object.
  *
  */
 static VALUE func_ajd_2_datetime(VALUE self, VALUE vajd){
@@ -64,7 +72,8 @@ static VALUE func_ajd_2_datetime(VALUE self, VALUE vajd){
  * call-seq:
  *  ajd(date)
  *
- * convert Date or DateTime object to AJD number.
+ * given Date or DateTime object
+ * convert  to Astronomical Julian Day Number.
  *
  */
 static VALUE func_get_ajd(VALUE self, VALUE vdatetime){
@@ -75,7 +84,8 @@ static VALUE func_get_ajd(VALUE self, VALUE vdatetime){
  * call-seq:
  *  jd(date)
  *
- * convert Date or DateTime object to JD number.
+ * given Date or DateTime object
+ * convert to JD number.
  *
  */
 static VALUE func_get_jd(VALUE self, VALUE vdatetime){
@@ -298,7 +308,7 @@ static VALUE func_true_longitude(VALUE self, VALUE vajd){
  *  mean_sidereal_time(ajd)
  *
  * given an Astronomical Julian Day Number
- * returns Mean Sidereal Time of Sun in hours.
+ * returns Greenwich Mean Sidereal Time in hours.
  *
 */
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
@@ -316,7 +326,14 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
   /* change to hours */
   return DBL2NUM(fmod(roundf((sidereal / 15.0) * RND12) / RND12, 24.0));
 }
-
+/*
+ * call-seq:
+ *  gmsa0(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Greenwich Mean Sidereal Time at midnight as angle.
+ *
+*/
 static VALUE func_gmsa0(VALUE self, VALUE vajd){
   double msa0;
   double ajd0 = NUM2DBL(vajd);
@@ -332,7 +349,14 @@ static VALUE func_gmsa0(VALUE self, VALUE vajd){
   NUM2DBL(func_mean_sidetime(self, DBL2NUM(ajd0))) * 15;
   return DBL2NUM(roundf(msa0 * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  gmsa(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Greenwich Mean Sidereal Time as angle.
+ *
+*/
 static VALUE func_gmsa(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd) - 0.5;
   double ajdt = fmod(ajd, 1.0);
@@ -341,18 +365,39 @@ static VALUE func_gmsa(VALUE self, VALUE vajd){
   double msa = anp(msar0 + vtr) * R2D;
   return DBL2NUM(roundf(msa * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  gmst0(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Greenwich Mean Sidereal Time at midnight in hours.
+ *
+*/
 static VALUE func_gmst0(VALUE self, VALUE vajd){
   double era0 =
   NUM2DBL(func_gmsa0(self, vajd)) / 15.0;
   return DBL2NUM(roundf(era0 * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  gmst(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Greenwich Mean Sidereal Time in hours.
+ *
+*/
 static VALUE func_gmst(VALUE self, VALUE vajd){
   double vmst = NUM2DBL(func_gmsa(self, vajd)) / 15.0;
   return DBL2NUM(roundf(vmst * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  radius_vector(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns radius vector.
+ *
+*/
 static VALUE func_rv(VALUE self, VALUE vajd){
   double vxv =
   NUM2DBL(func_xv(self, vajd));
@@ -362,7 +407,14 @@ static VALUE func_rv(VALUE self, VALUE vajd){
   sqrt(vxv * vxv + vyv * vyv);
   return DBL2NUM(roundf(vrv * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  ecliptic_x(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns ecliptic x component.
+ *
+*/
 static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
   double vrv =
   NUM2DBL(func_rv(self, vajd));
@@ -371,7 +423,14 @@ static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
   double vex = vrv * cos(vtl);
   return DBL2NUM(roundf(vex * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  ecliptic_y(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns ecliptic y component.
+ *
+*/
 static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
   double vrv =
   NUM2DBL(func_rv(self, vajd));
@@ -380,7 +439,14 @@ static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
   double vey = vrv * sin(vtl);
   return DBL2NUM(roundf(vey * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  right_ascension(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Right Ascension of Sun in hours.
+ *
+*/
 static VALUE func_right_ascension(VALUE self, VALUE vajd){
   double vey =
   NUM2DBL(func_ecliptic_y(self, vajd));
@@ -392,7 +458,14 @@ static VALUE func_right_ascension(VALUE self, VALUE vajd){
   fmod(atan2(vey * cos(vooe), vex) + M2PI, M2PI);
   return DBL2NUM(fmod(roundf((vra * R2D / 15.0) * RND12) / RND12, 24.0));
 }
-
+/*
+ * call-seq:
+ *  gha(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Greenwich Hour Angle in degrees.
+ *
+*/
 static VALUE func_gha(VALUE self, VALUE vajd){
   double gmsa =
   NUM2DBL(func_mean_sidetime(self, vajd)) * 15 * D2R;
@@ -401,7 +474,14 @@ static VALUE func_gha(VALUE self, VALUE vajd){
   double gha = anp(gmsa - ra);
   return DBL2NUM(roundf(gha * R2D * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  declination(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns Declination of Sun in degrees.
+ *
+*/
 static VALUE func_declination(VALUE self, VALUE vajd){
   double vex =
   NUM2DBL(func_ecliptic_x(self, vajd));
@@ -414,13 +494,29 @@ static VALUE func_declination(VALUE self, VALUE vajd){
   double vdec = atan2(vz, ver);
   return DBL2NUM(roundf((vdec * R2D) * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  local_sidereal_time(ajd, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Longitude,
+ * returns Local Mean Sidereal Time in hours.
+ *
+*/
 static VALUE func_local_sidetime(VALUE self, VALUE vajd, VALUE vlon){
   double vst = NUM2DBL(func_mean_sidetime(self, vajd));
   double vlst = vst + NUM2DBL(vlon) / 15.0 ;
   return DBL2NUM(fmod(roundf(vlst * RND12) / RND12, 24.0));
 }
-
+/*
+ * call-seq:
+ *  daylight_time(ajd, lat)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude,
+ * returns Hours of Day Light.
+ *
+*/
 static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
   double jd = floor(NUM2DBL(vajd));
   double vsin_alt = sin(-0.8333 * D2R);
@@ -443,77 +539,152 @@ static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
   double vdlt = vdla / 15.0 * 2.0;
   return DBL2NUM(roundf(vdlt * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  diurnal_arc(ajd, lat)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude,
+ * returns Hours from Noon or half Day Light Time.
+ *
+*/
 static VALUE func_diurnal_arc(VALUE self, VALUE vajd, VALUE vlat){
   double jd = floor(NUM2DBL(vajd));
   double dlt = NUM2DBL(func_dlt(self, DBL2NUM(jd), vlat));
   double da = dlt / 2.0;
   return DBL2NUM(roundf(da * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  t_south(ajd, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Longitude,
+ * returns Time in Hours when Sun transits local meridian.
+ *
+*/
 static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
   double jd = floor(NUM2DBL(vajd));
   double lst = NUM2DBL(func_local_sidetime(self, DBL2NUM(jd), vlon));
   double ra = NUM2DBL(func_right_ascension(self, DBL2NUM(jd)));
   double vx = lst - ra;
   double vt = vx - 24.0 * floor(vx * INV24 + 0.5);
-  //printf("%f", jd);
   return DBL2NUM(fmod(roundf((12.0 - vt) * RND12) / RND12, 24.0));
-  //return DBL2NUM(fmod(-vx, 24.0));
-  //return DBL2NUM(lst - ra);
 }
-
+/*
+ * call-seq:
+ *  t_rise(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns Time in Hours when Sun rises.
+ *
+*/
 static VALUE func_t_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
   return DBL2NUM(fmod(roundf((ts - da) * RND12) / RND12, 24.0));
 }
-
+/*
+ * call-seq:
+ *  t_mid_day(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns Time in Hours when Sun transits local meridian.
+ *
+*/
 static VALUE func_t_mid_day(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   return DBL2NUM(fmod(roundf(ts * RND12) / RND12, 24.0));
 }
-
+/*
+ * call-seq:
+ *  t_set(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns Time in Hours when Sun sets.
+ *
+*/
 static VALUE func_t_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double ts = NUM2DBL(func_t_south(self, vajd, vlon));
   double da = NUM2DBL(func_diurnal_arc(self, vajd, vlat));
   return DBL2NUM(roundf(fmod((ts + da), 24.0) * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  rise(ajd. lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Ruby DateTime object when Sun rises.
+ *
+*/
 static VALUE func_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double rt = NUM2DBL(func_t_rise(self, vajd, vlat, vlon));
   double ajd = NUM2DBL(vajd);
   double rtajd = floor(ajd) - 0.5 + rt / 24.0;
   VALUE vrt = DBL2NUM(rtajd);
-  //VALUE date = rb_sprintf("Sun rises: %2.0f:%02.0f UTC\n",
-  //floor(rt), floor(fmod(rt, 1) * 60.0));
   return func_ajd_2_datetime(self, vrt);
 }
-
+/*
+ * call-seq:
+ *  rise_jd(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Astronomical Julian Day Number when Sun rises.
+ *
+*/
 static VALUE func_rise_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double rt = NUM2DBL(func_t_rise(self, vajd, vlat, vlon));
   double ajd = NUM2DBL(vajd);
   double rtajd = floor(ajd) - 0.5 + rt / 24.0;
   return DBL2NUM(rtajd);
 }
-
+/*
+ * call-seq:
+ *  noon(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Ruby DateTime object when Sun transits
+ * local meridian.
+ *
+*/
 static VALUE func_noon(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double nt = NUM2DBL(func_t_south(self, vajd, vlon));
   double ajd = NUM2DBL(vajd);
   double ntajd = floor(ajd) - 0.5 + nt / 24.0;
   VALUE vnt = DBL2NUM(ntajd);
-  //VALUE date = rb_sprintf("Sun noon: %2.0f:%02.0f UTC\n",
-  //floor(nt), floor(fmod(nt, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vnt);
 }
-
+/*
+ * call-seq:
+ *  noon_jd(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Astronomical Julian Day Number when Sun
+ * transits local meridian.
+ *
+*/
 static VALUE func_noon_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double nt = NUM2DBL(func_t_south(self, vajd, vlon));
   double ajd = NUM2DBL(vajd);
   double ntajd = floor(ajd) - 0.5 + nt / 24.0;
   return DBL2NUM(ntajd);
 }
-
+/*
+ * call-seq:
+ *  set(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Ruby DateTime object when Sun sets.
+ *
+*/
 static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   VALUE vst;
   double stajd;
@@ -529,7 +700,15 @@ static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   //floor(st), floor(fmod(st, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vst);
 }
-
+/*
+ * call-seq:
+ *  set_jd(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns a Astronomical Julian Day Number when Sun sets.
+ *
+*/
 static VALUE func_set_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double stajd;
   double st = NUM2DBL(func_t_set(self, vajd, vlat, vlon));
@@ -541,22 +720,49 @@ static VALUE func_set_jd(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   stajd = floor(ajd) - 0.5 + st / 24.0;
   return DBL2NUM(stajd);
 }
+/*
+* macro for days since JD 2000
+*/
 #define days_since_2000_Jan_0(y,m,d) \
     (367L * (y) - ((7 * ((y) + (((m) + 9) / 12))) / 4) + ((275 * (m))  /9) + (d) - 730531.5L)
-
+/*
+ * call-seq:
+ *  jd2000_dif(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns the number of days and decimal time
+ * since JD 2000.
+ *
+*/
 static VALUE func_jd_from_2000(VALUE self, VALUE vajd){
   double ajd = NUM2DBL(vajd);
   double days = ajd - 2451545.0;
   return INT2NUM(days);
 }
-
+/*
+ * call-seq:
+ *  jd2000_dif_lon(ajd, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local  Longitude,
+ * returns the number of days and decimal time
+ * since JD 2000.
+ *
+*/
 static VALUE func_days_from_2000(VALUE self, VALUE vajd, VALUE vlon){
   double jd = NUM2DBL(vajd);
   double lon = NUM2DBL(vlon);
   double days = jd - DJ00 - lon / 360;
   return DBL2NUM(roundf(days * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  eot(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns equation of time in degrees
+ *
+*/
 static VALUE func_eot(VALUE self, VALUE vajd){
   double ma =
   NUM2DBL(func_mean_anomaly(self, vajd));
@@ -568,23 +774,57 @@ static VALUE func_eot(VALUE self, VALUE vajd){
   NUM2DBL(func_right_ascension(self, vajd));
   return DBL2NUM(roundf(anp(ma - ta + tl - ra) * R2D * RND12) / RND12 );
 }
-
+/*
+ * call-seq:
+ *  eot_jd(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns equation of time as time of a fractional
+ * day for easy Julian Number work
+ *
+*/
+static VALUE func_eot_jd(VALUE self, VALUE vajd){
+  double veot =
+  NUM2DBL(func_eot(self, vajd));
+  double jdeot = veot / 360.0;
+  return DBL2NUM(roundf(jdeot * RND12) / RND12);
+}
+/*
+ * call-seq:
+ *  eot_min(ajd)
+ *
+ * given an Astronomical Julian Day Number
+ * returns equation of time in minutes
+ *
+*/
 static VALUE func_eot_min(VALUE self, VALUE vajd){
   double eot = NUM2DBL(func_eot(self, vajd));
   return DBL2NUM(roundf((eot / 15 * 60) * RND12) / RND12);
 }
-
-static VALUE func_min_to_s(VALUE self, VALUE vmin){
-  return Qnil;
-}
-
+/*
+ * call-seq:
+ *  lha(ajd, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Longitude,
+ * returns Local Hour Angle in degrees.
+ *
+*/
 static VALUE func_lha(VALUE self, VALUE vajd, VALUE vlon){
   double lon = NUM2DBL(vlon) * D2R;
   double gha = NUM2DBL(func_gha(self, vajd)) * D2R;
   double lha = anp(gha + lon) * R2D;
   return DBL2NUM(roundf(lha * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  altitude(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns the Altitude of the Sun in degrees.
+ *
+*/
 static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double lat = NUM2DBL(vlat) * D2R;
   double delta = NUM2DBL(func_declination(self, vajd)) * D2R;
@@ -594,7 +834,15 @@ static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
     cos(lat) * cos(delta) * cos(lha)) * R2D;
   return DBL2NUM(roundf(alt * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  azimuth(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns the Azimuth of the Sun in degrees.
+ *
+*/
 static VALUE func_azimuth(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double lat = NUM2DBL(vlat) * D2R;
   double delta = NUM2DBL(func_declination(self, vajd)) * D2R;
@@ -605,28 +853,48 @@ static VALUE func_azimuth(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
             tan(delta) * cos(lat)) * R2D + 180.0;
   return DBL2NUM(roundf(az * RND12) / RND12);
 }
-
+/*
+ * call-seq:
+ *  rise_az(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns the Azimuth of the Sun rise in degrees.
+ *
+*/
 static VALUE func_rise_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double rjd = NUM2DBL(func_rise_jd(self, vajd, vlat, vlon));
   double raz = NUM2DBL(func_azimuth(self, DBL2NUM(rjd), vlat, vlon));
   return DBL2NUM(raz);
 }
-
+/*
+ * call-seq:
+ *  noon_az(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns the Azimuth of the Sun at transit in degrees.
+ * Note : should be very close to 180 degrees.
+ *
+*/
 static VALUE func_noon_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double njd = NUM2DBL(func_noon_jd(self, vajd, vlat, vlon));
   double naz = NUM2DBL(func_azimuth(self, DBL2NUM(njd), vlat, vlon));
   return DBL2NUM(naz);
 }
-
+/*
+ * call-seq:
+ *  set_az(ajd, lat, lon)
+ *
+ * given an Astronomical Julian Day Number and
+ * local Latitude and Longitude,
+ * returns the Azimuth of the Sun set in degrees.
+ *
+*/
 static VALUE func_set_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   double sjd = NUM2DBL(func_set_jd(self, vajd, vlat, vlon));
   double saz = NUM2DBL(func_azimuth(self, DBL2NUM(sjd), vlat, vlon));
   return DBL2NUM(saz);
-}
-
-static VALUE func_rev12(VALUE self, VALUE vx){
-  double x = NUM2DBL(vx);
-  return DBL2NUM(x - 24.0 * floor(x * INV24 + 0.5));
 }
 
 void Init_calc_sun(void){
@@ -649,9 +917,10 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "eccentric_anomaly", func_eccentric_anomaly, 1);
   rb_define_method(cCalcSun, "ecliptic_x", func_ecliptic_x, 1);
   rb_define_method(cCalcSun, "ecliptic_y", func_ecliptic_y, 1);
+  rb_define_method(cCalcSun, "eot", func_eot, 1);
+  rb_define_method(cCalcSun, "eot_jd", func_eot_jd, 1);
   rb_define_method(cCalcSun, "eot_min", func_eot_min, 1);
   rb_define_method(cCalcSun, "equation_of_center", func_equation_of_center, 1);
-  rb_define_method(cCalcSun, "equation_of_time", func_eot, 1);
   rb_define_method(cCalcSun, "gha", func_gha, 1);
   rb_define_method(cCalcSun, "gmsa0", func_gmsa0, 1);
   rb_define_method(cCalcSun, "gmsa", func_gmsa, 1);
@@ -666,13 +935,11 @@ void Init_calc_sun(void){
   rb_define_method(cCalcSun, "mean_anomaly", func_mean_anomaly, 1);
   rb_define_method(cCalcSun, "mean_longitude", func_mean_longitude, 1);
   rb_define_method(cCalcSun, "mean_sidereal_time", func_mean_sidetime, 1);
-  rb_define_method(cCalcSun, "min_to_s", func_min_to_s, 1);
   rb_define_method(cCalcSun, "noon", func_noon, 3);
   rb_define_method(cCalcSun, "noon_jd", func_noon_jd, 3);
   rb_define_method(cCalcSun, "noon_az", func_noon_az, 3);
   rb_define_method(cCalcSun, "obliquity_of_ecliptic", func_obliquity_of_ecliptic, 1);
   rb_define_method(cCalcSun, "radius_vector", func_rv, 1);
-  rb_define_method(cCalcSun, "reverse_12", func_rev12, 1);
   rb_define_method(cCalcSun, "right_ascension", func_right_ascension, 1);
   rb_define_method(cCalcSun, "rise", func_rise, 3);
   rb_define_method(cCalcSun, "rise_jd", func_rise_jd, 3);

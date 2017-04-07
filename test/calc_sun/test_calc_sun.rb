@@ -392,10 +392,17 @@ class TestSunTimes < Test::Unit::TestCase # MiniTest::Test
     )
   end
 
-  def test_equation_of_time
+  def test_eot
     assert_equal(
       3.656335491072,
-      @t.equation_of_time(@ajd)
+      @t.eot(@ajd)
+    )
+  end
+
+  def test_eot_jd
+    assert_equal(
+      0.01015648768,
+      @t.eot_jd(@ajd)
     )
   end
 

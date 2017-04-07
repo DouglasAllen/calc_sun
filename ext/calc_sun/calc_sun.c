@@ -220,19 +220,12 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
  * given an Astronomical Julian Day Number
  * returns Longitude of Sun at Perihelion in radians.
  *
- * Note: Try not to use this as it is not standard practice
- *       for these types of calculations. True Longitude may
- *       be found from Mean Longitude and Equation of Center.
  *
 */
 static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
-  double jd = NUM2DBL(vajd);
-  double d = jd - DJ00;
-  double vlop =
-  fmod(
-    (282.9404 +
-     4.70935e-05 * d
-    ) * D2R, M2PI);
+  double vml = NUM2DBL(func_mean_longitude(self, vajd));
+  double vma = NUM2DBL(func_mean_anomaly(self, vajd));
+  double vlop = anp(vml - vma);
   return DBL2NUM(roundf(vlop * RND12) / RND12);
 }
 /*

@@ -128,7 +128,7 @@ class TestAngles1 < Test::Unit::TestCase # MiniTest::Test
 
   def test_longitude_of_perihelion
     assert_equal(
-      4.93938016256,
+      4.939326685184,
       @t.longitude_of_perihelion(@ajd)
     )
   end

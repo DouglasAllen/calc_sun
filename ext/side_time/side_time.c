@@ -106,12 +106,9 @@ void Init_side_time(void){
   VALUE cSideTime = rb_define_class("SideTime", rb_cObject);
   rb_require("date");
   rb_define_method(cSideTime, "initialize", t_init, 0);
-  rb_define_attr(cSideTime, "date", 1, 1);
   rb_define_method(cSideTime, "ajd", func_get_ajd, 1);
   rb_define_method(cSideTime, "s_datetime", func_set_datetime, 1);
   rb_define_method(cSideTime, "jd", func_get_jd, 1);
-  //rb_define_method(cSideTime, "jd2000_dif", func_jd_from_2000, 1);
-  //rb_define_method(cSideTime, "jd2000_dif_lon", func_days_from_2000, 2);
   rb_define_method(cSideTime, "lmst", func_local_sidetime, 2);
   rb_define_method(cSideTime, "gmst", func_mean_sidetime, 1);
 }

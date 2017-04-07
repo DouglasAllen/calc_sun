@@ -98,7 +98,8 @@ static VALUE func_get_jd(VALUE self, VALUE vdatetime){
  *  mean_anomaly(ajd)
  *
  * given an Astronomical Julian Day Number
- * returns Mean Anomaly of Sun in radians.
+ * returns Mean Anomaly of Sun in radians
+ * rounded to 12 decimal places.
  *
  */
 static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
@@ -118,6 +119,7 @@ static VALUE func_mean_anomaly(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Eccentriciy of Earth Orbit around Sun.
+ * rounded to 12 decimal places.
  *
  */
 static VALUE func_eccentricity(VALUE self, VALUE vajd){
@@ -135,6 +137,7 @@ static VALUE func_eccentricity(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Equation of Center in radians.
+ * rounded to 12 decimal places.
  *
 */
 
@@ -163,6 +166,7 @@ static VALUE func_equation_of_center(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns True Anomaly of Sun in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_true_anomaly(VALUE self, VALUE vajd){
@@ -179,6 +183,7 @@ static VALUE func_true_anomaly(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Mean Longitude of Sun in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_mean_longitude(VALUE self, VALUE vajd){
@@ -197,6 +202,7 @@ static VALUE func_mean_longitude(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Eccentric Anomaly of Sun in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
@@ -214,6 +220,7 @@ static VALUE func_eccentric_anomaly(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Earth Tilt (Obliquity) in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
@@ -229,6 +236,7 @@ static VALUE func_obliquity_of_ecliptic(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Longitude of Sun at Perihelion in radians.
+ * rounded to 12 decimal places.
  *
  *
 */
@@ -244,6 +252,7 @@ static VALUE func_longitude_of_perihelion(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns X component of Radius Vector in radians.
+ * rounded to 12 decimal places.
  *
  *
 */
@@ -261,6 +270,7 @@ static VALUE func_xv(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Y component of Radius Vector in radians.
+ * rounded to 12 decimal places.
  *
  *
 */
@@ -279,6 +289,7 @@ static VALUE func_yv(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns True Anomaly of Sun in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_true_anomaly1(VALUE self, VALUE vajd){
@@ -293,6 +304,7 @@ static VALUE func_true_anomaly1(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns True Longitude of Sun in radians.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_true_longitude(VALUE self, VALUE vajd){
@@ -309,6 +321,7 @@ static VALUE func_true_longitude(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Mean Sidereal Time in hours.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
@@ -332,6 +345,7 @@ static VALUE func_mean_sidetime(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Mean Sidereal Time at midnight as angle.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_gmsa0(VALUE self, VALUE vajd){
@@ -355,6 +369,7 @@ static VALUE func_gmsa0(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Mean Sidereal Time as angle.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_gmsa(VALUE self, VALUE vajd){
@@ -371,6 +386,7 @@ static VALUE func_gmsa(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Mean Sidereal Time at midnight in hours.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_gmst0(VALUE self, VALUE vajd){
@@ -384,6 +400,7 @@ static VALUE func_gmst0(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Mean Sidereal Time in hours.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_gmst(VALUE self, VALUE vajd){
@@ -396,6 +413,7 @@ static VALUE func_gmst(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns radius vector.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_rv(VALUE self, VALUE vajd){
@@ -413,6 +431,7 @@ static VALUE func_rv(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns ecliptic x component.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
@@ -429,6 +448,7 @@ static VALUE func_ecliptic_x(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns ecliptic y component.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
@@ -445,6 +465,7 @@ static VALUE func_ecliptic_y(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Right Ascension of Sun in hours.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_right_ascension(VALUE self, VALUE vajd){
@@ -464,6 +485,7 @@ static VALUE func_right_ascension(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Greenwich Hour Angle in degrees.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_gha(VALUE self, VALUE vajd){
@@ -480,6 +502,7 @@ static VALUE func_gha(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns Declination of Sun in degrees.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_declination(VALUE self, VALUE vajd){
@@ -501,6 +524,7 @@ static VALUE func_declination(VALUE self, VALUE vajd){
  * given an Astronomical Julian Day Number and
  * local Longitude,
  * returns Local Mean Sidereal Time in hours.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_local_sidetime(VALUE self, VALUE vajd, VALUE vlon){
@@ -515,6 +539,7 @@ static VALUE func_local_sidetime(VALUE self, VALUE vajd, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude,
  * returns Hours of Day Light.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
@@ -546,6 +571,7 @@ static VALUE func_dlt(VALUE self, VALUE vajd, VALUE vlat){
  * given an Astronomical Julian Day Number and
  * local Latitude,
  * returns Hours from Noon or half Day Light Time.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_diurnal_arc(VALUE self, VALUE vajd, VALUE vlat){
@@ -561,6 +587,7 @@ static VALUE func_diurnal_arc(VALUE self, VALUE vajd, VALUE vlat){
  * given an Astronomical Julian Day Number and
  * local Longitude,
  * returns Time in Hours when Sun transits local meridian.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
@@ -578,6 +605,7 @@ static VALUE func_t_south(VALUE self, VALUE vajd, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude and Longitude,
  * returns Time in Hours when Sun rises.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_t_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -592,6 +620,7 @@ static VALUE func_t_rise(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude and Longitude,
  * returns Time in Hours when Sun transits local meridian.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_t_mid_day(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -605,6 +634,7 @@ static VALUE func_t_mid_day(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude and Longitude,
  * returns Time in Hours when Sun sets.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_t_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -696,8 +726,6 @@ static VALUE func_set(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
   }
   stajd = floor(ajd) - 0.5 + st / 24.0;
   vst = DBL2NUM(stajd);
-  //VALUE date = rb_sprintf("Sun set: %2.0f:%02.0f UTC\n",
-  //floor(st), floor(fmod(st, 1.0) * 60.0));
   return func_ajd_2_datetime(self, vst);
 }
 /*
@@ -747,6 +775,7 @@ static VALUE func_jd_from_2000(VALUE self, VALUE vajd){
  * local  Longitude,
  * returns the number of days and decimal time
  * since JD 2000.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_days_from_2000(VALUE self, VALUE vajd, VALUE vlon){
@@ -761,6 +790,7 @@ static VALUE func_days_from_2000(VALUE self, VALUE vajd, VALUE vlon){
  *
  * given an Astronomical Julian Day Number
  * returns equation of time in degrees
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_eot(VALUE self, VALUE vajd){
@@ -781,6 +811,7 @@ static VALUE func_eot(VALUE self, VALUE vajd){
  * given an Astronomical Julian Day Number
  * returns equation of time as time of a fractional
  * day for easy Julian Number work
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_eot_jd(VALUE self, VALUE vajd){
@@ -795,6 +826,7 @@ static VALUE func_eot_jd(VALUE self, VALUE vajd){
  *
  * given an Astronomical Julian Day Number
  * returns equation of time in minutes
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_eot_min(VALUE self, VALUE vajd){
@@ -808,6 +840,7 @@ static VALUE func_eot_min(VALUE self, VALUE vajd){
  * given an Astronomical Julian Day Number and
  * local Longitude,
  * returns Local Hour Angle in degrees.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_lha(VALUE self, VALUE vajd, VALUE vlon){
@@ -823,6 +856,7 @@ static VALUE func_lha(VALUE self, VALUE vajd, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude and Longitude,
  * returns the Altitude of the Sun in degrees.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
@@ -841,6 +875,7 @@ static VALUE func_altitude(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
  * given an Astronomical Julian Day Number and
  * local Latitude and Longitude,
  * returns the Azimuth of the Sun in degrees.
+ * rounded to 12 decimal places.
  *
 */
 static VALUE func_azimuth(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){

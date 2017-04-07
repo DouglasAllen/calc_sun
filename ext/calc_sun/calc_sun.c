@@ -38,11 +38,11 @@ static VALUE t_init(VALUE self){
 }
 /*
  * call-seq:
- *  date('yyyy-mm-ddT00:00:00+/-zoneoffset')
+ *  set_datetime('yyyy-mm-ddT00:00:00+/-zoneoffset')
  * or
- *  date('20010203T040506+0700')
+ *  set_datetime('20010203T040506+0700')
  * or
- *  date('3rd Feb 2001 04:05:06 PM')
+ *  set_datetime('3rd Feb 2001 04:05:06 PM')
  *
  * given a string representing date time
  * convert to DateTime object.
@@ -933,14 +933,9 @@ static VALUE func_set_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
 }
 
 void Init_calc_sun(void){
-  VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
   rb_require("date");
-  // rb_define_const(cCalcSun, "DJ00", DBL2NUM(DJ00));
-  //VALUE cDate = rb_const_get(rb_cObject, rb_intern("Date"));
-  //VALUE rb_date = rb_funcall(cDate, rb_intern("new"), 0);
-  //rb_iv_set(self, "@date", rb_date);
+  VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
   rb_define_method(cCalcSun, "initialize", t_init, 0);
-  rb_define_attr(cCalcSun, "date", 1, 1);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "ajd2dt", func_ajd_2_datetime, 1);
   rb_define_method(cCalcSun, "altitude", func_altitude, 3);

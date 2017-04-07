@@ -5,7 +5,7 @@
 
 Home    :: https://rubygems.org/gems/calc_sun
 Code    :: https://github.com/DouglasAllen/calc_sun
-RDoc    :: http://www.rubydoc.info/gems/calc_sun/1.2.9
+RDoc    :: http://www.rubydoc.info/gems/calc_sun/1.2.10
 Issues  :: https://github.com/DouglasAllen/calc_sun/issues
 
 

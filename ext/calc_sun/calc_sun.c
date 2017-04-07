@@ -257,7 +257,7 @@ static VALUE func_xv(VALUE self, VALUE vajd){
 }
 /*
  * call-seq:
- *  xv(ajd)
+ *  yv(ajd)
  *
  * given an Astronomical Julian Day Number
  * returns Y component of Radius Vector in radians.

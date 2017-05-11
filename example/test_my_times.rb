@@ -25,7 +25,7 @@ class TestMyTime < Test::Unit::TestCase # MiniTest::Test
 
   def test_t_south_time
     assert_equal(
-      '2017-03-17T18:03:17+00:00',
+      '2017-03-17T18:03:16+00:00',
       DateTime.jd(@ajd + 0.5).to_s
     )
   end
@@ -60,14 +60,14 @@ class TestMyTime < Test::Unit::TestCase # MiniTest::Test
 
   def test1_gmsa
     assert_equal(
-      86.326166683648,
+      86.323297779712,
       @t.gmsa(@ajd)
     )
   end
 
   def test1_gmst
     assert_equal(
-      5.75507791872,
+      5.7548865536,
       @t.gmst(@ajd)
     )
   end

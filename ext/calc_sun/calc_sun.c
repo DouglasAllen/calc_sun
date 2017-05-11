@@ -1,6 +1,7 @@
 #include <ruby.h>
 #include <math.h>
 #include <time.h>
+#include "spa.h"
 /* if PI's not defined, define it */
 #ifndef PI
 #define PI 3.1415926535897932384626433832795028841971L
@@ -933,8 +934,8 @@ static VALUE func_set_az(VALUE self, VALUE vajd, VALUE vlat, VALUE vlon){
 }
 
 void Init_calc_sun(void){
-  rb_require("date");
   VALUE cCalcSun = rb_define_class("CalcSun", rb_cObject);
+  rb_require("date");
   rb_define_method(cCalcSun, "initialize", t_init, 0);
   rb_define_method(cCalcSun, "ajd", func_get_ajd, 1);
   rb_define_method(cCalcSun, "ajd2dt", func_ajd_2_datetime, 1);

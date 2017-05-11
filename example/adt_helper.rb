@@ -1,4 +1,6 @@
 
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'bigdecimal'
 require 'calc_sun'
 require 'date'
@@ -14,17 +16,25 @@ class AnalemmaDataTable
                 :page,
                 :table
 
-  def initialize
-    @year         = Time.now.utc.year
-    @eot          = Eot.new
-    @cs           = CalcSun.new
-    @start        = Date.parse("#{@year}-1-1")
-    @finish       = Date.parse("#{@year}-12-31")
+  def setup_helper(year)
+    @start        = Date.parse("#{year}-1-1")
+    @finish       = Date.parse("#{year}-12-31")
     @span         = 0..(@finish - @start).to_i
+  end
+
+  def page_helper
     @page         = '<head>'
     @page         << '<link rel="stylesheet", type="text/css",
                             href="/stylesheets/app.css">'
     @page         << '</link></head><body>'
+  end
+
+  def initialize
+    @year         = Time.now.utc.year
+    @eot          = Eot.new
+    @cs           = CalcSun.new
+    setup_helper(year)
+    page_helper()
     build
   end
 
